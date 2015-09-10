@@ -1,0 +1,219 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+<div class="page coupon-single-coupon-page">
+	<div class="pageheader">
+		<h2 class="page-header">Add Coupons</h2>
+		<div class="page-bar">
+			<ul class="page-breadcrumb">
+				<li>
+					<a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+				</li>
+				<li>
+					<a href="#">Add&nbsp;Details</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="add-nav">
+		<div class="nav-heading">
+			<h3>Enter Coupon Details</h3>
+			<span class="controls pull-right">
+				<a href="/movinCartAdmin/coupon/" class="btn btn-ef btn-ef-1 btn-ef-1-warning btn-ef-1c mb-10" data-toggle="tooltip" title="Back"><i>Back</i></a>
+				<a href="#" onclick="validate_n_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Save"><i>Save</i></a>
+			</span>
+		</div>
+		<form action="/movinCartAdmin/coupon/add/" method="POST" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form">
+            {% csrf_token %}
+			<div role="tabpanel">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Coupon Details</a></li>
+					<li role="presentation"><a href="#rulebookTab" aria-controls="details" role="tab" data-toggle="tab">Coupon RuleBook</a></li>
+				</ul>
+				<div class="tab-content">
+                  <!-- tab in tabs -->
+					<div role="tabpanel" class="tab-pane active" id="details">
+                    <!-- row -->
+						<div class="row">
+                  <!-- col -->
+							<div class="col-md-12">
+                            		<!-- tile -->
+								<section class="tile">
+                                <!-- tile header -->
+									<div class="tile-header dvd dvd-btm">
+										<h1 class="custom-font"><strong>Coupon Details </strong></h1>
+									</div>
+                                      <!-- /tile header -->
+                                <!-- tile body -->
+									<div class="tile-body">
+										<div class="form-horizontal" role="form">
+											<div class="form-group">
+												<label for="code" class="col-sm-2 control-label">Code</label>
+												<div class="col-sm-10">
+													<input required name="coupon_code" type="value"  class="form-control" id="code" placeholder="Enter Coupon Code">
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="discount" class="col-sm-2 control-label">Discount</label>
+											<div class="col-sm-10">
+												<input required name="coupon_discount" type="value"  class="form-control" id="discount" placeholder="Enter Coupon Discount">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="discount_type" class="col-sm-2 control-label">Discount Type: <span class="text-lightred text-md">*</span></label>
+											<div class="col-md-10">
+												<select required tabindex="1" name="coupon_discount_type" single="" class="chosen-select" style="width: 95%;" >
+													<option value="0" >Direct Minus</option>
+													<option value="1" >Percent Minus</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="max_discount_limit" class="col-sm-2 control-label">Maximum Discount Limit</label>
+											<div class="col-sm-10">
+												<input required name="coupon_max_discount_limit" type="value"  class="form-control" id="max_discount_limit" placeholder="Enter Max Discount Limit">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="min_total" class="col-sm-2 control-label">Minimum Total</label>
+											<div class="col-sm-10">
+												<input name="coupon_min_total" type="value" class="form-control" id="min_total" placeholder="Enter Minimum Total">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="used_count" class="col-sm-2 control-label">Used Count</label>
+											<div class="col-sm-10">
+												<input required name="coupon_used_count" type="value"  class="form-control" id="used_count" placeholder="Enter Used Count">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">Is&nbsp;Active</label>
+											<div class="col-sm-10">
+												<div class="checkbox">
+													<label><input type="checkbox" name="coupon_is_active" id="optionsRadios1"></label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="rulebookTab">
+						<!-- row -->
+						<div class="row">
+							<!-- col -->
+							<div class="col-md-12">
+								<!-- tile -->
+								<section class="tile tile">
+									<!-- tile body -->
+									<div class="tile-body p-0">
+										<div class="table-responsive">
+											<table class="table table-hover table-striped">
+												<thead>
+												<tr>
+													<th>On/Off</th>
+													<th style="text-align: center;">Rule</th>
+													<th style="text-align: center;">Value</th>
+												</tr>
+												</thead>
+												<tbody>
+												<tr>
+													<td> <label><input type="checkbox" name="min_total_is_active" ></label></td>
+													<td class="text-center" style="width:100px;">Minimum Total:</td>
+													<td> <input name="min_total" class="form-control" id="rule_value" placeholder="Rule Value"></td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="service_type_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Service Type:</td>
+													<td> <select tabindex="3" name="service_type" multiple="" class="chosen-select" style="width: 100%;">
+													{% for serv in services %}
+														<option value="{{serv.id}}">{{serv.name}}</option>
+														{% endfor %}
+													</select>
+													</td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="universal_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Universal:</td>
+													<td>
+														<select tabindex="3" name="universal" single="" class="chosen-select" style="width: 100%;">
+															{% for o in universal_options%}
+															<option value="{{o}}">{{o}}</option>
+															{% endfor %}
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="user_specific_is_active"></label></td>
+													<td class="text-center" style="width:100px;">If User Specific:</td>
+													<td> <input name="user_specific" class="form-control" placeholder="Enter Phone Numbers separated by Comma" ></td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="max_use_number_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Max Use Number:</td>
+													<td> <input name="max_use_number" type="number" class="form-control" id="rule_value" placeholder="Enter Maximum Use Count"></td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="location_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Location:</td>
+													<td>
+														<select tabindex="3" id="locations" name="locations" multiple="" class="chosen-select" style="width: 100%;">
+															{% for l in locations %}
+															<option value="{{l.id}}">{{l.sub_area}}</option>
+															{% endfor %}
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="category_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Category:</td>
+													<td> <input name="category" class="form-control" id="rule_value" placeholder="Rule Value" value="" disabled=""></td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="ignore_category_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Ignore Category:</td>
+													<td> <input name="ignore_category" class="form-control" id="rule_value" placeholder="Rule Value" value="" disabled=""></td>
+												</tr>
+												<tr>
+													<td> <label><input type="checkbox" name="min_version_is_active"></label></td>
+													<td class="text-center" style="width:100px;">Minimum Version Number:</td>
+													<td> <input name="min_version" type="number" class="form-control" placeholder="Enter Minimum Version Number for Coupon"></td>
+												</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<!-- /tile body -->
+								</section>
+								<!-- /tile -->
+							</div>
+							<!-- /col -->
+						</div>
+                        <!-- /row -->
+					</div><!-- end ngRepeat: tab in tabs -->
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}
+{% block jscontent %}
+    <script src="{%  static "assets/js/vendor/colorpicker/js/bootstrap-colorpicker.min.js"%}"></script>
+    <script src="{% static "assets/js/vendor/daterangepicker/moment.min.js"%}"></script>
+<script>
+function validate_n_submit() {
+        document.forms['myForm'].submit();
+
+}
+function selectionchange()
+{
+    var e = document.getElementById("id_rule_book");
+    var str = e.options[e.selectedIndex].value;
+    document.getElementById('txt').value = str;
+}
+</script>
+{% endblock %}
+

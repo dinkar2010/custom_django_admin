@@ -1,0 +1,238 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+  {% block bodycontent %}
+
+      <div class="page page-shop-single-product">
+
+                    <div class="pageheader">
+
+                        <h2>Add Store</h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="#"><i class="fa fa-home"></i> MovinCart</a>
+                                </li>
+                                <li>
+                                    <a href="#">Store</a>
+                                </li>
+                                <li>
+                                    <a href="#">Add Store</a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pagecontent">
+
+
+
+                        <div class="add-nav">
+                            <div class="nav-heading">
+                                <h3>Enter Shop Details</h3>
+                                <span class="controls pull-right">
+                                  <a href="/movinCartAdmin/show_stores/" class="btn btn-ef btn-ef-1 btn-ef-1-warning btn-ef-1c mb-10" data-toggle="tooltip" title="Back"><i>Back</i></a>
+                                  <a href="#" onclick="validate_n_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Save"><i>Save</i></a>
+                                </span>
+                            </div>
+
+                            <div role="tabpanel">
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Shop Details</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane active" id="details">
+
+                                         <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile">
+                                                    <!-- /tile header -->
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <form action="/movinCartAdmin/add_store/" method="POST" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form">
+                                                            {% csrf_token %}
+                                                            <div class="form-group">
+                                                                <label for="name" class="col-sm-2 control-label">Shop Name: <span class="text-lightred text-md">*</span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input required name="s_name" type="text" class="form-control" id="name" placeholder="Shop Name">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="name" class="col-sm-2 control-label">Owner Name: <span class="text-lightred text-md">*</span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input required name="s_owner" type="text" class="form-control" id="s_owner" placeholder="Owner Name">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="name" class="col-sm-2 control-label">Shop Contact : <span class="text-lightred text-md">*</span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input required name="s_contact" type="text" class="form-control" id="s_contact" placeholder="Shop Contact">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="name" class="col-sm-2 control-label">Shop Address: <span class="text-lightred text-md">*</span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input required name="s_address" type="text" class="form-control" id="s_address" placeholder="Shop Address">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="services" class="col-sm-2 control-label">Services Served: <span class="text-lightred text-md">*</span></label>
+                                                                <div class="col-sm-10">
+                                                                    <select required name="s_services" tabindex="3" id="category" multiple="" class="chosen-select" style="width: 100%;">
+                                                                        <option value=""></option>
+                                                                    {% if services %}
+                                                                        {% for s in services %}
+                                                                            <option value="{{s.id}}" >{{s.name}}</option>
+                                                                        {% endfor %}
+                                                                    {% endif %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                        <div class="form-group">
+                                                                <label for="name" class="col-sm-2 control-label">Open Time: <span class="text-lightred text-md">*</span></label>
+                                                                <div class='input-group datepicker w-360 mt-10' data-format="LT">
+                                                                    <input name="s_open" id="s_open" value="{{ store.open_time }}" type='text' class="form-control" />
+                                                                    <span class="input-group-addon">
+                                                                        <span class="fa fa-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                                <label for="name" class="col-sm-2 control-label">End Time:<span class="text-lightred text-md">*</span></label>
+                                                                <div class='input-group datepicker w-360 mt-10'  data-format="LT">
+                                                                    <input name="s_end" id="s_end" value="{{ store.end_time }}" type='text' class="form-control" />
+                                                                    <span class="input-group-addon">
+                                                                        <span class="fa fa-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                                <label for="l_cord" class="col-sm-2 control-label">Location: <span class="text-lightred text-md">*</span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input name="l_cord0" type="text" class="form-control" id="l_cord0" disabled placeholder="Location Coordinates">
+                                                                    <input name="l_cord" class="form-control" id="l_cord" type="hidden">
+                                                                </div>
+                                                        </div>
+
+                                                        </form>
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+                                                <section class="tile">
+                                                    <!-- tile header -->
+                                                    <div class="tile-header dvd dvd-btm">
+                                                        <h1 class="custom-font"><strong>Add </strong> Store Location</h1>
+                                                    </div>
+                                                    <!-- /tile header -->
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+                                                                <div id="basic-map" style="height: 400px;">
+                                                        </div>
+                                                        <!--
+                                                        Write Map Code Here -->
+                                                    </div>
+                                                    <!-- /tile body -->
+                                                </section>
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+                                    </div>
+                                    <!-- tab in tabs -->
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+  {% endblock %}
+
+
+{% block jscontent %}
+
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNent3rKW1eCE6AEQ185rZ4Jac8dGcNBg">
+    </script>
+
+    <script>
+        function validate_n_submit() {
+            var x = document.forms["myForm"]["s_name"].value;
+            if (x == null || x == "") {
+                alert("Name must be filled out");
+            } else {
+                document.getElementById("myForm").submit();
+
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        var poly_list = "";
+        var mapOptions = {
+        center: { lat: -34.397, lng: 150.644},
+        zoom: 8
+    };
+    var map = new google.maps.Map(document.getElementById('basic-map'), mapOptions);
+    map.setCenter(new google.maps.LatLng(19.118371, 72.907281), 5);
+    map.setZoom(13);
+
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(19.118371, 72.907281),
+        map: map,
+        draggable : true,
+        title: 'Store Location'
+    });
+
+    function initialize() {
+        document.getElementById('l_cord').value = marker.getPosition().lat() + " , " + marker.getPosition().lng();
+        document.getElementById('l_cord0').value = marker.getPosition().lat() + " , " + marker.getPosition().lng();
+        google.maps.event.addListener(marker, 'dragend', function(event){
+            document.getElementById('l_cord0').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+            document.getElementById('l_cord').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+    });
+        google.maps.event.addListener(marker, 'dragstart', function(event){
+        document.getElementById('l_cord0').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+        document.getElementById('l_cord').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+
+    </script>
+{% endblock %}
+

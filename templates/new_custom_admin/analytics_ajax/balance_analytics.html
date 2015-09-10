@@ -1,0 +1,79 @@
+{% load static %}
+<div id="combined-chart" style="height: 250px"></div>
+
+<script src="{% static "jquery/external/jquery/jquery.js"%}"></script>
+
+<script src="{% static "assets/js/vendor/flot/jquery.flot.min.js"%}"></script>
+
+<script src="{% static "assets/js/vendor/flot/jquery.flot.resize.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.orderBars.js"%}"></script>
+
+
+<script src="{% static "assets/js/vendor/flot-tooltip/jquery.flot.tooltip.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot-spline/jquery.flot.spline.min.js"%}"></script>
+
+
+<script type="text/javascript" >
+
+        // Initialize Combined Chart
+        var data5 = [{
+            data: {{ balance_data.total_balance | safe }},
+            label: 'Total Order ',
+            points: {
+                show: true,
+                radius: 3
+            },
+            splines: {
+                show: true,
+                tension: 0.45,
+                lineWidth: 4,
+                fill: 0
+            }
+        }, {
+            data: {{ balance_data.delivered_balance | safe }},
+            label: 'Delivered order',
+            bars: {
+                show: true,
+                barWidth: 0.4,
+                lineWidth: 0,
+                fillColor: {colors: [{opacity: 0.6}, {opacity: 0.8}]}
+            }
+        }];
+
+        var options5 = {
+            colors: ['#16a085', '#FF0066'],
+            series: {
+                shadowSize: 0
+            },
+            xaxis: {
+                font: {
+                    color: '#666'
+                },
+                position: 'bottom',
+                ticks:{{ balance_data.ticks | safe }}
+            },
+            yaxis: {
+                font: {
+                    color: '#ccc'
+                }
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 0,
+                color: '#ccc'
+            },
+            tooltip: true,
+            tooltipOpts: {content: '%s of %y', defaultTheme: false, shifts: {x: 0, y: 20}}
+        };
+
+        var plot5 = $.plot($("#combined-chart"), data5, options5);
+
+        $(window).resize(function () {
+            // redraw the graph in the correctly sized div
+            plot5.resize();
+            plot5.setupGrid();
+            plot5.draw();
+        });
+
+</script>

@@ -1,0 +1,341 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+<div class="page page-maps-google">
+	<div class="pageheader">
+		<h2>Covered Locations</h2>
+		<div class="page-bar">
+			<ul class="page-breadcrumb">
+				<li>
+					<a href="/admin/"><i class="fa fa-home"></i> MovinCart</a>
+				</li>
+				<li>
+					<a href="#">Maps</a>
+				</li>
+				<li>
+					<a href="#">Covered Locations</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- row -->
+	<div class="row">
+		<!-- col -->
+		<div class="col-md-12">
+			<!-- tile -->
+			<section class="tile">
+				<!-- tile header -->
+				<div class="tile-header dvd dvd-btm">
+					<h1 class="custom-font"><strong>Covered</strong> Locations</h1>
+					<ul class="controls">
+						<li class="dropdown">
+							<a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
+								<i class="fa fa-cog"></i>
+								<i class="fa fa-spinner fa-spin"></i>
+							</a>
+							<ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+								<li>
+									<a role="button" tabindex="0" class="tile-toggle">
+										<span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
+										<span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
+									</a>
+								</li>
+								<li>
+									<a role="button" tabindex="0" class="tile-refresh">
+										<i class="fa fa-refresh"></i> Refresh
+									</a>
+								</li>
+								<li>
+									<a role="button" tabindex="0" class="tile-fullscreen">
+										<i class="fa fa-expand"></i> Fullscreen
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li class="remove">
+							<a role="button" tabindex="0" class="tile-close">
+								<i class="fa fa-times"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- /tile header -->
+				<!-- tile body -->
+				<div class="tile-body">
+					<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					<div id="basic-map" style="height: 600px;"></div>
+				</div><!-- /tile body -->
+			</section><!-- /tile -->
+			<!-- tile -->
+			<!-- /tile -->
+		</div>
+		<!-- /col -->
+	</div>
+	<!-- /row -->
+</div>
+<!--/ Application Content -->
+{% endblock %} <!-- /#wrapper -->
+{% block jscontent %}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNent3rKW1eCE6AEQ185rZ4Jac8dGcNBg"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+<!-- ===============================================
+============== Page Specific Scripts ===============
+================================================ -->
+<script>
+	var markers = [];
+	var previous_marker="";
+	var first_marker = "";
+	var poly_list = "";
+	var uniqueId = 1;
+	var editFlag = 0;
+	var geocoder;
+	var mapOptions = {
+		center: { lat: -34.397, lng: 150.644},
+		zoom: 8
+	};
+	var map = new google.maps.Map(document.getElementById('basic-map'),mapOptions);
+	map.setCenter(new google.maps.LatLng(19.118371, 72.907281), 5);
+	map.setZoom(13);
+
+	<!--get element by id for placing search box-->
+	var input = document.getElementById('pac-input');
+	var searchBox = new google.maps.places.SearchBox(input);  <!--create search box-->
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input); <!--search box position-->
+	<!--bounds for search on map-->
+	map.addListener('bounds_changed', function() {
+		searchBox.setBounds(map.getBounds());
+	});
+	var autocomplete = new google.maps.places.Autocomplete(input);
+
+	<!--function to initialize map-->
+	function initialize() {
+		geocoder = new google.maps.Geocoder();
+		var info=[];
+		google.maps.event.addListener(map, 'click', function(event) {
+			if (editFlag === 0){
+			}
+			else{
+				if (previous_marker === ""){
+					addMarker(event.latLng,"First Marker");
+					first_marker = event.latLng;
+					previous_marker = event.latLng;
+					poly_list = "POLYGON((";
+					poly_list = poly_list + first_marker.lat()+" "+first_marker.lng()+",";
+					document.getElementById('l_coord').value=poly_list;
+					areaCoordinates.push(event.latLng);
+					line.setPath(areaCoordinates);
+					line.setMap(map);
+				}
+				else{
+					previous_marker = event.latLng;
+					poly_list = poly_list + event.latLng.lat()+" "+event.latLng.lng()+",";
+					document.getElementById('l_coord').value=poly_list;
+					areaCoordinates.push(event.latLng);
+					line.setPath(areaCoordinates);
+					line.setMap(map);
+				}
+			}
+		});
+		{% for polygon,loc in polygons %}
+			var areaCoordinates = [];
+			var line = new google.maps.Polygon({
+				path: areaCoordinates,
+				strokeColor: "#FF0000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+				fillColor: '#FF0000',
+				fillOpacity:0.35,
+				map: map,
+			});
+			{% for point in polygon %}
+
+				var point= new google.maps.LatLng({{point.0}}, {{point.1}});
+				// alert('{{custom_location.point.0}} , {{custom_location.point.1}}');
+
+				if (previous_marker === ""){
+					{#                      addMarker(point,"First Marker");#}
+					first_marker = point;
+					previous_marker = point;
+					poly_list = "POLYGON((";
+					poly_list = poly_list + point.lat()+" "+point.lng()+",";
+					// document.getElementById('l_coord').value=poly_list;
+					areaCoordinates.push(point);
+					line.setPath(areaCoordinates);
+					line.setMap(map);
+				}
+				else{
+					previous_marker = point;
+					poly_list = poly_list + point.lat()+" "+point.lng()+",";
+					// document.getElementById('l_coord').value=poly_list;
+					areaCoordinates.push(point);
+					line.setPath(areaCoordinates);
+					line.setMap(map);
+				}
+			{% endfor %}
+			info= [];
+			google.maps.event.addListener(line, 'mouseover', function(e) {
+				var latitude=e.latLng.lat();
+				var longitude=e.latLng.lng();
+				var latlng = {lat: latitude, lng:longitude};
+				var service_location="{{loc.sub_area}}"+","+"{{loc.area}}";
+				this.setOptions({fillOpacity: 0.6});
+				info=new google.maps.InfoWindow({
+					content:service_location
+				})
+				info.setPosition(latlng);
+				info.open(map);
+			});
+			google.maps.event.addListener(line, 'mouseout', function() {
+				info.close();
+			});
+		{% endfor %}
+		var window = [];
+		searchBox.addListener('places_changed', function() {
+			var places = searchBox.getPlaces();
+			if (places.length == 0) {
+				return;
+			}
+			window.forEach(function(locality) {
+				locality.setMap(null);
+			});
+			window = [];
+			var bounds = new google.maps.LatLngBounds();
+			places.forEach(function(place) {
+				var icon = {
+					url: place.icon,
+					size: new google.maps.Size(71, 71),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(17, 34),
+					scaledSize: new google.maps.Size(25, 25)
+					};
+				// Create a info window for each searched place.
+
+				window.push(new google.maps.InfoWindow({
+					map: map,
+					icon: icon,
+					content: place.name,
+					position: place.geometry.location
+				}));
+				if (place.geometry.viewport) {
+					bounds.union(place.geometry.viewport);
+				}
+				else {
+					bounds.extend(place.geometry.location);
+				}
+			});
+		});
+		map.fitBounds(bounds);
+	}
+		google.maps.event.addDomListener(window, 'load', initialize);
+		//Adds marker to the map, used for marking the starting point of polygon
+		function addMarker(myLatlng, name){
+			var marker = new google.maps.Marker({
+				id : uniqueId,
+				position: myLatlng,
+				map: map,
+				title: name
+			});
+			uniqueId++;
+			markers.push(marker);
+			google.maps.event.addListener(marker, 'click', function() {
+				editFlag= 0;
+				areaCoordinates.push(myLatlng);
+				line.setPath(areaCoordinates);
+				line.setMap(map);
+				poly_list = poly_list + first_marker.lat()+" "+first_marker.lng();
+				poly_list = poly_list + "))";
+				document.getElementById('l_coord').value=poly_list;
+				/*
+				var content = "<br /><input type = 'button' va;ue = 'Delete' onclick = 'DeleteMarker(" + marker.id + ");' value = 'Delete' />";
+				var infoWindow = new google.maps.InfoWindow({
+				content: content
+				});
+				infoWindow.open(map, marker);
+				*/
+			});
+		}
+		//Removes the most recent point while adding new location
+		function removeRecentPoint(){
+			//alert(areaCoordinates);
+			if (previous_marker === ""){
+				alert("There is no Point to remove");
+				return;
+			}
+			var poly_array = poly_list.split(",");
+			areaCoordinates.pop();
+			if (poly_list.charAt(poly_list.length-1) === ')'){
+				poly_array.pop();
+			}
+			else{
+				poly_array.pop();
+				poly_array.pop();
+			}
+			if (areaCoordinates.length <= 0){
+				var del_marker = markers[0];
+				del_marker.setMap(null);
+				markers.pop();
+				previous_marker="";
+				poly_list = "";
+			}
+			else{
+				poly_list = poly_array.join() + ",";
+				line.setPath(areaCoordinates);
+				line.setMap(map);
+			}
+			document.getElementById('l_coord').value=poly_list;
+		}
+		function makeEditable(){
+			editFlag = 1;
+			return;
+		}
+
+		function codeAddress() {
+			var address = document.getElementById('pac_input').value;
+			geocoder.geocode({'address': address}, function(results, status) {
+				// alert(status);
+				if (status == google.maps.GeocoderStatus.OK) {
+					position = results[0].geometry.location;
+					map.setCenter(results[0].geometry.location);
+				}
+			});
+		}
+		function submit_form(){
+			var polygon_check= $("#l_coord").val();
+			var city_check= $("#l_city").val();
+			var area_check= $("#l_area").val();
+			var zone_check= $("#l_zone").val();
+			var sub_area_check= $("#l_sub_area").val();
+			if(city_check==""){
+				alert("Please Enter City");
+				return false;
+			}
+			if(polygon_check==""){
+				alert("Please Enter polygon");
+				return false;
+			}
+			if(area_check==""){
+				alert("Please Enter area");
+			return false;
+		}
+		if(sub_area_check==""){
+			alert("Please Enter Sub Area");
+			return false;
+		}
+		if(zone_check==""){
+			alert("Please Enter Zone");
+			return false;
+		}
+		if(polygon_check.indexOf("))")>-1){
+			document.getElementById("edit_location_form").submit();
+		}
+
+		else{
+			alert("Please Complete polygon");
+		}
+	}
+</script>
+<!--/ Page Specific Scripts -->
+{% endblock %}
+</body>
+<!-- Mirrored from www.tattek.sk/minovate-noAngular/maps-google.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 27 Jun 2015 12:57:53 GMT -->
+</html>

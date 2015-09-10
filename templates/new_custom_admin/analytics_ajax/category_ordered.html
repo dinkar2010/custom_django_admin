@@ -1,0 +1,86 @@
+{% load static %}
+<div id="line-chart1" style="height: 400px"></div>
+<script src="{% static "jquery/external/jquery/jquery.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.min.js"%}"></script>
+
+<script src="{% static "assets/js/vendor/flot/jquery.flot.resize.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.orderBars.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.stack.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.pie.min.js"%}"></script>
+
+
+<script src="{% static "assets/js/vendor/flot-tooltip/jquery.flot.tooltip.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot-spline/jquery.flot.spline.min.js"%}"></script>
+
+
+<script type="text/javascript" >
+
+        // Initialize Combined Chart
+
+        var data11 = [
+            {% for key,value in categories_vs_orders_per_tick.items %}
+                {
+                    data: {{ value | safe }},
+                    label: '{{ key }}',
+                    points: {
+                        show: true,
+                        radius: 6
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.45,
+                        lineWidth: 5,
+                        fill: 0
+                    }
+                },
+            {% endfor %}
+
+
+        ];
+
+        var options11 = {
+            series: {
+                shadowSize: 0
+            },
+            xaxis:{
+                font: {
+                    color: '#666'
+                },
+                position: 'bottom',
+                ticks:{{ ticks | safe }}
+
+            },
+            yaxis: {
+                font: {
+                    color: '#666'
+                }
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 0,
+                color: '#ccc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: '%s: %y',
+                defaultTheme: false,
+                shifts: {
+                    x: 0,
+                    y: 20
+                }
+            }
+        };
+
+        var plot11 = $.plot($("#line-chart1"), data11, options11);
+
+        $(window).resize(function() {
+            // redraw the graph in the correctly sized div
+            plot11.resize();
+            plot11.setupGrid();
+            plot11.draw();
+        });
+
+
+
+</script>

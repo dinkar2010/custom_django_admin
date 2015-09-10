@@ -1,0 +1,120 @@
+{% load static %}
+<div id="line-chart" style="height: 350px"></div>
+<script src="{% static "jquery/external/jquery/jquery.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.min.js"%}"></script>
+
+<script src="{% static "assets/js/vendor/flot/jquery.flot.resize.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.orderBars.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.stack.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.pie.min.js"%}"></script>
+
+
+<script src="{% static "assets/js/vendor/flot-tooltip/jquery.flot.tooltip.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot-spline/jquery.flot.spline.min.js"%}"></script>
+
+
+<script type="text/javascript" >
+
+        // Initialize Combined Chart
+
+        var data1 = [{
+            data: {{ order_sales_data.sales_data | safe }},
+            label: 'Delivered',
+            points: {
+                show: true,
+                radius: 6
+            },
+            splines: {
+                show: true,
+                tension: 0.45,
+                lineWidth: 5,
+                fill: 0
+            }
+        }, {
+            data: {{ order_sales_data.order_data | safe }},
+            label: 'All Orders',
+            points: {
+                show: true,
+                radius: 6
+            },
+            splines: {
+                show: true,
+                tension: 0.45,
+                lineWidth: 5,
+                fill: 0
+            }
+        },{
+            data: {{ order_sales_data.canceled_orders | safe }},
+            label: 'Canceled',
+            points: {
+                show: true,
+                radius: 6
+            },
+            splines: {
+                show: true,
+                tension: 0.45,
+                lineWidth: 3,
+                fill: 0
+            }
+        },{
+            data: {{ order_sales_data.cnf_by_user | safe }},
+            label: 'Confirmed By User',
+            points: {
+                show: true,
+                radius: 6
+            },
+            splines: {
+                show: true,
+                tension: 0.45,
+                lineWidth: 3,
+                fill: 0
+            }
+        }];
+
+        var options1 = {
+            colors: ['#a2d200', '#cd97eb','#ff0000','#00ff00'],
+            series: {
+                shadowSize: 0
+            },
+            xaxis:{
+                font: {
+                    color: '#666'
+                },
+                position: 'bottom',
+                ticks:{{ order_sales_data.ticks | safe }}
+
+            },
+            yaxis: {
+                font: {
+                    color: '#666'
+                }
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 0,
+                color: '#ccc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: '%s: %y',
+                defaultTheme: false,
+                shifts: {
+                    x: 0,
+                    y: 20
+                }
+            }
+        };
+
+        var plot1 = $.plot($("#line-chart"), data1, options1);
+
+        $(window).resize(function() {
+            // redraw the graph in the correctly sized div
+            plot1.resize();
+            plot1.setupGrid();
+            plot1.draw();
+        });
+
+
+
+</script>

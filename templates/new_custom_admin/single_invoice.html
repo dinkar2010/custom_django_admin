@@ -1,0 +1,589 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+
+                <div class="page page-shop-single-invoice">
+
+                    <div class="pageheader">
+
+                        <h2>Single Invoice</h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="/admin/"><i class="fa fa-home"></i> MovinCart</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/app/invoice/">Invoices</a>
+                                </li>
+                                <li>
+                                    <a href="#">Single Invoice</a>
+                                </li>
+                            </ul>
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="pagecontent">
+
+
+
+                        <div class="add-nav">
+                            <div class="nav-heading">
+                                <h3>Invoice Details : <strong class="text-greensea">#{{custom_invoice.invoice.id}}</strong></h3>
+                                <span class="controls pull-right">
+                                  <a href="shop-invoices.html" class="btn btn-ef btn-ef-1 btn-ef-1-default btn-ef-1a btn-rounded-20 mr-5" data-toggle="tooltip" title="Back"><i class="fa fa-times"></i></a>
+                                  <a href="javascript:;" class="btn btn-ef btn-ef-1 btn-ef-1-default btn-ef-1a btn-rounded-20 mr-5" data-toggle="tooltip" title="Send"><i class="fa fa-envelope"></i></a>
+                                  <a href="javascript:window.print()" class="btn btn-ef btn-ef-1 btn-ef-1-default btn-ef-1a btn-rounded-20" data-toggle="tooltip" title="Print"><i class="fa fa-print"></i></a>
+                                </span>
+                            </div>
+                            <div role="tabpanel">
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
+                                    <li role="presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notes</a></li>
+                                    <li role="presentation"><a href="#historyTab" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+                                </ul>
+
+
+                                <div class="tab-content">
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane active" id="details">
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <!-- row -->
+                                                        <div class="row">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-9"><img src="{% static "invoice_logo.png"%}" alt="" class="thumb thumb-l m-10 mb-20">
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <h3 class="mb-0 text-custom text-strong">#{{custom_invoice.invoice.id}} / {{custom_invoice.order.created_at|date}}</h3>
+                                                                <p class="text-default lt">Order ID: #{{custom_invoice.order.id}}</p>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                        <!-- row -->
+                                                        <div class="row b-t pt-20">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    From
+                                                                </p>
+
+                                                                <ul class="list-unstyled text-default lt mb-20">
+                                                                    <li>MovinCart</li>
+                                                                    <li>A601, Floral Deck Plaza</li>
+                                                                    <li>MIDC Road, Andheri East</li>
+                                                                    <li>+91 771-898-9247</li>
+                                                                    <li><a href="mailto:query@movincart.com">query@movincart.com</a><</li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    To
+                                                                    <!--<a href="javascript:;" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>-->
+
+                                                                </p>
+                                                                <ul class="list-unstyled text-default lt mb-20">
+                                                                    <li>{{custom_invoice.order.user.first_name}} {{custom_invoice.order.user.last_name}}</li>
+                                                                    <li>{{custom_invoice.order.user.userprofile.contact}}</li>
+                                                                    <li>{{custom_invoice.order.address.address}}</li>
+                                                                    <li>{{custom_invoice.order.address.landmark}}</li>
+
+                                                                    <li>{{custom_invoice.order.address.location.sub_area}} </li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Payment Details</p>
+                                                                <ul class="list-unstyled text-default lt mb-20">
+                                                                    <li><strong>Mode:</strong> Cash On Delivery</li>
+                                                                    <li><strong>Grand Total:</strong> &#8377;{{custom_invoice.total_amount}}</li>
+                                                                    
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>SN</th>
+                                                                    <th>Name</th>
+                                                                    <th>Size</th>
+                                                                    <th>Price</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Discount</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for p in custom_invoice.products %}
+                                                                    <tr>
+                                                                        <td>{{forloop.counter}}</td>
+                                                                        <td>{{p.sp.product.product.name}}</td>
+                                                                        <td>{{p.size}}</td>
+                                                                        <td class="ng-binding">&#8377;{{p.price | stringformat:'d'}}</td>
+                                                                        <td>{{p.qn}}</td>
+                                                                        <td class="ng-binding">&#8377;{{p.discount | stringformat:'d'}}</td>
+                                                                        <td class="ng-binding">&#8377;{{p.product_final_total | stringformat:'d'}}</td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+                                        <!-- row -->
+                                        <div class="row print_amounts">
+                                            <!-- col -->
+                                            <div class="col-md-3 col-md-offset-9 price-total">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple bg-tr-black lter">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <ul class="list-unstyled">
+                                                            <li class="ng-binding"><strong class="inline-block w-sm mb-5">Subtotal:</strong> &#8377;{{custom_invoice.total_without_discount | stringformat:'d'}}</li>
+                                                            <li class="ng-binding"><strong class="inline-block w-sm mb-5">Shipping:</strong> &#8377;{{custom_invoice.delivery_charges | stringformat:'d'}}</li>
+                                                            {% if custom_invoice.isDiscounted %}
+                                                                <li class="ng-binding"><strong class="inline-block w-sm mb-5">Discount:</strong> &#8377;{{custom_invoice.discount_money | stringformat:'d'}}</li>
+                                                                <li class="ng-binding"><strong class="inline-block w-sm mb-5">Coupon:</strong> {{custom_invoice.coupon_code }}</li>
+                                                            {% endif %}
+                                                            <li><strong class="inline-block w-sm">Grang Total:</strong> <h3 class="inline-block text-success ng-binding">&#8377;{{custom_invoice.total_amount | stringformat:'d'}}</h3></li>
+                                                        </ul>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+
+
+                                    </div>
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane" id="notes">
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <header class="mb-20">
+                                                            <span class="text-sm text-default lt">Created at: 26 Jan, 2015</span>
+                                                            <span class="pull-right text-sm text-default lt">ID: 266946</span>
+                                                        </header>
+
+                                                        <h4 class="mt-10">This is Note</h4>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <header class="mb-20">
+                                                            <span class="text-sm text-default lt">Created at: 26 Jan, 2015</span>
+                                                            <span class="pull-right text-sm text-default lt">ID: 266946</span>
+                                                        </header>
+
+                                                        <h4 class="mt-10">This is Note</h4>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <header class="mb-20">
+                                                            <span class="text-sm text-default lt">Created at: 26 Jan, 2015</span>
+                                                            <span class="pull-right text-sm text-default lt">ID: 266946</span>
+                                                        </header>
+
+                                                        <h4 class="mt-10">This is Note</h4>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <header class="mb-20">
+                                                            <span class="text-sm text-default lt">Created at: 26 Jan, 2015</span>
+                                                            <span class="pull-right text-sm text-default lt">ID: 266946</span>
+                                                        </header>
+
+                                                        <h4 class="mt-10">This is Note</h4>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <header class="mb-20">
+                                                            <span class="text-sm text-default lt">Created at: 26 Jan, 2015</span>
+                                                            <span class="pull-right text-sm text-default lt">ID: 266946</span>
+                                                        </header>
+
+                                                        <h4 class="mt-10">This is Note</h4>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <header class="mb-20">
+                                                            <span class="text-sm text-default lt">Created at: 26 Jan, 2015</span>
+                                                            <span class="pull-right text-sm text-default lt">ID: 266946</span>
+                                                        </header>
+
+                                                        <h4 class="mt-10">This is Note</h4>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                            <!-- col -->
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple no-bg">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <a href="javascript:;" class="tile-button bg-white"><i class="fa fa-plus"></i> Add Note</a>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                        </div>
+                                        <!-- /row -->
+
+
+
+                                    </div>
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane" id="historyTab">
+
+
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile time-simple">
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <!-- row -->
+                                                        <div class="row">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-9">
+                                                                <a href="" target="_blank" title="Free Logo"><img src="" alt="" class="thumb thumb-xl m-10 mb-20"></a>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <h3 class="mb-0 text-custom text-strong">#2015000152 / 26 Jan, 2015</h3>
+                                                                <p class="text-default lt">Order ID: #365116</p>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                        <!-- row -->
+                                                        <div class="row b-t pt-20">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    From
+                                                                    <a href="javascript:;" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>
+                                                                </p>
+
+                                                                <ul class="list-unstyled text-default lt mb-20">
+                                                                    <li>Minovate inc.</li>
+                                                                    <li>Slobodarska 59</li>
+                                                                    <li>Kosice, Kosice 1</li>
+                                                                    <li>129 95</li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    To
+                                                                    <a href="javascript:;" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>
+                                                                </p>
+                                                                <ul class="list-unstyled text-default lt mb-20">
+                                                                    <li>John Douey</li>
+                                                                    <li>Vajnorska 512</li>
+                                                                    <li>Bratislava, Bratislava 1</li>
+                                                                    <li>811 09</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Payment Details</p>
+                                                                <ul class="list-unstyled text-default lt mb-20">
+                                                                    <li><strong>VAT #:</strong> EU33545115</li>
+                                                                    <li><strong>Account Name:</strong> Minovate Inc.</li>
+                                                                    <li><strong>IBAN Code:</strong> SK2109000000001234567890</li>
+                                                                    <li><strong>Swift Code:</strong> BREXSKBX</li>
+
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>Desription</th>
+                                                                    <th>Date</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td><a href="javascript:;">1</a></td>
+                                                                    <td>Invoice Created</td>
+                                                                    <td>Jan 20, 2015</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><a href="javascript:;">2</a></td>
+                                                                    <td>Invoice Sent</td>
+                                                                    <td>Jan 20, 2015</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><a href="javascript:;">3</a></td>
+                                                                    <td>Invoice Paid</td>
+                                                                    <td>Jan 21, 2015</td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                
+{% endblock %}
+
+{% block jscontent %}
+        <script>
+            $(window).load(function(){
+
+
+            });
+        </script>
+        <!--/ Page Specific Scripts -->
+{% endblock %}
+</body>
+
+<!-- Mirrored from www.tattek.sk/minovate-noAngular/shop-single-invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 27 Jun 2015 12:57:17 GMT -->
+</html>

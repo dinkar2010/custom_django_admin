@@ -1,0 +1,290 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+
+    <div class="page page-shop-single-product" xmlns="http://www.w3.org/1999/html">
+        <div class="pageheader">
+            <h2>Edit Coupon</h2>
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                    </li>
+                    <li>
+                        <a href="/movinCartAdmin/coupon">Coupon</a>
+                    </li>
+                    <li>
+                        <a href="#">Edit Coupon</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="add-nav">
+		    <div class="nav-heading">
+                <h3>Coupon - {{ coupon.code }}</h3>
+                <span class="controls pull-right">
+                    <a href="/movinCartAdmin/coupon/" class="btn btn-ef btn-ef-1 btn-ef-1-warning btn-ef-1c mb-10" data-toggle="tooltip" title="Back"><i>Back</i></a>
+                    <a href="#" onclick="validateForm()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Save"><i>Save</i></a>
+                </span>
+            </div>
+
+			<div role="tabpanel">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Coupon Details</a></li>
+                    <li role="presentation"><a href="#rulebookTab" aria-controls="rule_book" role="tab" data-toggle="tab">Rule Book</a></li>
+                    <li role="presentation"><a href="#historyTab" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+                </ul>
+				<div class="tab-content"><!-- tab in tabs -->
+
+                    <form action="/movinCartAdmin/coupon/{{ coupon.id }}/" method="POST" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form">
+                        {% csrf_token %}
+                        <div role="tabpanel" class="tab-pane active" id="details"><!-- row -->
+                            <div class="row"> <!-- col -->
+                                <div class="col-md-12"><!-- tile -->
+                                    <section class="tile"><!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Edit </strong> General Informations</h1>
+                                        </div>
+                                        <!-- /tile header -->
+                                        <!-- tile body -->
+                                        <div class="tile-body">
+                                            <div class="form-group">
+                                                <label for="id" class="col-sm-2 control-label">Coupon ID: </label>
+                                                <div class="col-sm-10">
+                                                    <input name="coupon_id" type="text" class="form-control" id="id" placeholder="coupon ID" value="{{ coupon.id }}" disabled="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="code" class="col-sm-2 control-label">Coupon Code: <span class="text-lightred text-md">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input name="coupon_code" type="text" class="form-control" id="code" placeholder="code" value="{{ coupon.code }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="discount" class="col-sm-2 control-label">Discount: <span class="text-lightred text-md">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input name="coupon_discount" type="number" countype="text" class="form-control" id="discount" placeholder="discount" value="{{ coupon.discount }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="discount_type" class="col-sm-2 control-label">Discount Type: <span class="text-lightred text-md">*</span></label>
+                                                <div class="col-md-10">
+                                                    <select tabindex="1" name="coupon_discount_type" single="" class="chosen-select" style="width: 95%;" >
+                                                        <option {% if coupon.discount_type == 0 %} selected {% endif %} value="0" >Direct Minus</option>
+                                                        <option {% if coupon.discount_type == 1 %} selected {% endif %} value="1" >Percent Minus</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="max_discount_limit" class="col-sm-2 control-label">Max Discount Limit: <span class="text-lightred text-md">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input name="coupon_max_discount_limit" type="text" class="form-control" id="max_discount_limit" placeholder="max discount limit" value="{{ coupon.max_discount_limit }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="min_total" class="col-sm-2 control-label">Min Total: <span class="text-lightred text-md">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input name="coupon_min_total" type="text" class="form-control" id="min_total" placeholder="min total" value="{{ coupon.min_total }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="used_count" class="col-sm-2 control-label">Used Count: <span class="text-lightred text-md">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input name="coupon_used_count" type="text" class="form-control" id="used_count" placeholder="used count" value="{{ coupon.used_count }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">Is&nbsp;Active</label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="coupon_is_active" id="optionsRadios1" {% if coupon.is_active %} checked {% endif %}></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  <!-- /tile body -->
+                                    </section>
+                                    <!-- /tile -->
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+                        </div><!-- end ngRepeat: tab in tabs -->
+
+
+                        <div role="tabpanel" class="tab-pane" id="rulebookTab">
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+                                    <!-- tile -->
+                                    <section class="tile tile">
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Rule</strong>Book</h1>
+                                        </div>
+                                        <!-- /tile header -->
+                                        <!-- tile body -->
+                                        <div class="tile-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>On/Off</th>
+                                                        <th style="text-align: center;">Rule</th>
+                                                        <th style="text-align: center;">Value</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="min_total_is_active" {% if 0 in rule_type_selected %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Minimum Total:</td>
+                                                        <td> <input name="min_total" class="form-control" id="rule_value" placeholder="Rule Value" value="{{ rule_selected.0 }}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="service_type_is_active" {% if 1 in rule_type_selected %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Service Type:</td>
+                                                        <td> <select tabindex="3" name="service_type" multiple="" class="chosen-select" style="width: 100%;">
+                                                                {% for serv in services %}
+                                                                    <option {% if serv.id in rule_selected.1 %}
+                                                                                selected
+                                                                            {% endif %} value="{{serv.id}}">{{serv.name}}</option>
+                                                                 {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="universal_is_active" {% if 3 in rule_type_selected %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Universal:</td>
+                                                        <td>
+                                                            <select tabindex="3" name="universal" single="" class="chosen-select" style="width: 100%;">
+                                                                {% for o in universal_options%}
+                                                                    <option {% if o == rule_selected.3 %}
+                                                                                selected
+                                                                    {% endif %} value="{{o}}">{{o}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="user_specific_is_active" {% if 4 in rule_type_selected  %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">If User Specific:</td>
+                                                        <td> <input name="user_specific" class="form-control" placeholder="Enter Phone Numbers separated by Comma" value="{{ rule_selected.4 }}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="max_use_number_is_active" {% if 5 in rule_type_selected  %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Max Use Number:</td>
+                                                        <td> <input name="max_use_number" type="number" class="form-control" id="rule_value" placeholder="Enter Maximum Use Count" value="{{ rule_selected.5 }}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="location_is_active" {% if 6 in rule_type_selected  %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Location:</td>
+                                                        <td>
+                                                            <select tabindex="3" id="locations" name="locations" multiple="" class="chosen-select" style="width: 100%;">
+                                                                {% for l in locations %}
+                                                                    <option {% if l.id in rule_selected.6 %}
+                                                                                selected
+                                                                    {% endif %} value="{{l.id}}">{{l.sub_area}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="category_is_active" {% if 7 in rule_type_selected %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Category:</td>
+                                                        <td> <input name="category" class="form-control" id="rule_value" placeholder="Rule Value" value="" disabled=""></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="ignore_category_is_active" {% if 8 in rule_type_selected %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Ignore Category:</td>
+                                                        <td> <input name="ignore_category" class="form-control" id="rule_value" placeholder="Rule Value" value="" disabled=""></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <label><input type="checkbox" name="min_version_is_active" {% if 9 in rule_type_selected %} checked {% endif %}></label></td>
+                                                        <td class="text-center" style="width:100px;">Minimum Version Number:</td>
+                                                        <td> <input name="min_version" type="number" class="form-control" placeholder="Enter Minimum Version Number for Coupon" value="{{ rule_selected.9 }}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /tile body -->
+                                    </section>
+                                    <!-- /tile -->
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+                        </div><!-- end ngRepeat: tab in tabs -->
+                    </form>
+
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane" id="historyTab">
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+                                    <!-- tile -->
+                                    <section class="tile tile">
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Coupon </strong> History</h1>
+                                        </div>
+                                        <!-- /tile header -->
+                                        <!-- tile body -->
+                                        <div class="tile-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Desription</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><a href="javascript:;">1</a></td>
+                                                        <td>Coupon Created</td>
+                                                        <td>{{ coupon.created_at }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">2</a></td>
+                                                        <td>Coupon Modified</td>
+                                                        <td>{{ coupon.modified_at }}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /tile body -->
+                                    </section>
+                                    <!-- /tile -->
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+                        </div><!-- end ngRepeat: tab in tabs -->
+                </div>
+			</div>
+    </div>
+</div>
+{% endblock %}
+{% block jscontent %}
+<script>
+	function validateForm() {
+		$(document).ready(function(){
+			$(document).ajaxStart(function(){
+				$("#wait").css("display", "block");
+			});
+			$(document).ajaxComplete(function(){
+				$("#wait").css("display", "none");
+			});
+			document.getElementById("myForm").submit();
+	    });
+	}
+</script>
+{% endblock %}
+
+
+

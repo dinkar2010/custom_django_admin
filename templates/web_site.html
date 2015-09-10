@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MovinCart</title>
+<link href="{% static "front_page/style.css"%}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static "front_page/jquery.min.js"%}"></script> 
+
+<link rel="shortcut icon" href="{% static "app_logo.ico"%}"/>
+</head>
+<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div id="wrapper">
+	<div class="main">
+		<div class="header">
+			<div class="logo">
+				<h1>Movin<strong>Cart</strong></h1>
+				<h2><strong>shopping</strong> has a new address</h2>
+				<a target="_blank" href="https://play.google.com/store/apps/details?id=com.movincart">
+  					<img alt="Android app on Google Play"
+       					src="http://developer.android.com/images/brand/en_generic_rgb_wo_45.png" style="margin-top: 50px;" />
+				</a>
+                <a href="#">
+  					<img alt="Application on App Store"
+       					src="{% static "images/applesoon.png"%}" style="margin-top: 50px;width: 153px;margin-left: 30px;" />
+				</a>
+			</div>
+			<!--<div class="form">
+				<p>want to learn more? - </p><input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Please enter a valid email"type="text" id="test" value="Enter Your Email Address"/>
+			</div>-->
+			<ul class="social"style="margin-top: 110px;">
+				<li class="facebook"><a target="_blank" href="https://www.facebook.com/pages/MovinCart-Instant-Delivery-App/966300100047491"></a></li>
+				<li class="twitter"><a href="#"></a></li>
+				<li class="youtube"><a href="#"></a></li>
+			</ul>
+		</div>
+		
+		<ul class="boxes">
+			<li>
+				<h3>the new way to</h3>
+				shop for anything
+				<span class="divider"></span>
+			</li>
+			<li>
+				<h3>email us</h3>
+				<a href="#">query@movincart.com</a>
+				<span class="divider"></span>
+			</li>
+			<li class="last">
+				<h3>call us</h3>
+				+91 771-898-9247
+			</li>
+		</ul>
+<div style="margin-left: 400px;margin-top: 690px;">
+<div class="fb-like" data-href="https://www.facebook.com/pages/MovinCart-Instant-Delivery-App/966300100047491" data-layout="standard" data-action="like" data-show-faces="false" data-share="false"></div></div>
+</div>
+	</div>
+
+
+<script type="text/javascript">
+function validateEmail(email) {
+    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return re.test(email);
+}
+var placeholder = $("#test").val();
+$(document).keyup(function (e) {
+    if ($("#test").is(":focus")&& $("#test").val()!=placeholder && $("#test").val()!='' && (e.keyCode == 13)) {
+    	if(validateEmail($("#test").val())){
+    		// alert($("#test").val());
+    	}else{
+    		// alert("Invalid Email");
+    	}
+        // Do something
+    }
+});
+$("#test").keydown(function() {
+    if (this.value == placeholder) {
+        this.value = '';
+    }
+}).blur(function() {
+    if (this.value == '') {
+        this.value = placeholder;
+    }
+});
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-63313695-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

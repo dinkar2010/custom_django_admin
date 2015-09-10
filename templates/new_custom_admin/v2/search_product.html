@@ -1,0 +1,106 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+<link rel="stylesheet" href="{% static "jquery/json_viewer/css/jjsonviewer.css"%}"> 0
+<div class="page coupon-single-coupon-page">
+	<div class="pageheader">
+		<h2 class="page-header">Test API</h2>
+		<div class="page-bar">
+			<ul class="page-breadcrumb">
+				<li>
+					<a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+				</li>
+				<li>
+					<a href="#">Search Product API Detail</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="add-nav">
+		<div role="tabpanel">
+			<!-- Nav tabs -->
+			<div class="tab-content">
+				<!-- tab in tabs -->
+				<div role="tabpanel" class="tab-pane active" id="details">
+					<!-- row -->
+					<div class="row">
+						<!-- col -->
+						<div class="col-md-12">
+							<!-- tile -->
+							<form action="" method="GET" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form">
+								{% csrf_token %}
+								<section class="tile">
+									<!-- tile header -->
+									<div class="tile-header dvd dvd-btm">
+										<h1 class="custom-font"><strong>Search Product API Details </strong></h1>
+									</div>
+									<!-- /tile header -->
+									<!-- tile body -->
+									<div class="form-group">
+										<label for="locations" class="col-sm-2 control-label">Location ID: <span class="text-lightred text-md"></span></label>
+										<div class="col-sm-6">
+											<select tabindex="1" name="location" id="id_location"  class="chosen-select" style="width: 95%;" >
+												<option value="">--------------------</option>
+												{% for l in locations %}
+												<option value="{{l.id}}" >{{l.sub_area}}</option>
+												{% endfor %}
+											</select>
+										</div>
+                                       </div>
+									<div class="form-group">
+										<label for="p_name" class="col-sm-2 control-label">Search: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="p_name" type="value"  class="form-control" id="id_name" placeholder="Search" style="width:100%">
+                                            </div>
+                                        </div>
+									<ul class="pager">
+										<li>
+											<a href="#" onclick="validate_n_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Save"><i>Submit</i></a>
+										</li>
+									</ul>
+								</section>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tile-body" id="image_div" ></div>
+		<div id = "placeholder"></div>
+	</div>
+</div>
+{% endblock %}
+{% block jscontent %}
+
+<script src="{% static "jquery/json_viewer/js/jjsonviewer.js"%}"></script>
+
+<script>
+
+function validate_n_submit()
+{
+	var a=document.getElementById("id_location").value;
+	var b=document.getElementById("id_name").value;
+	var r= b.split(" ");
+	final_text =''
+	for (var m in r) {
+		m =r[m] +'+';
+		final_text += m;
+	}
+	final_text = final_text.substring(0, final_text.length-1);
+	var url = '/api/v2/get_store_product/?location='+a+'&keyword='+final_text;
+	$(document).ready(function(){
+		document.getElementById("image_div").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+		$(document).ajaxStart(function(){
+			$("#wait").css("display", "block");
+		});
+		$(document).ajaxComplete(function(){
+			$("#wait").css("display", "none");
+		});
+		$.getJSON(url,function(data){
+			$("#placeholder").jJsonViewer(data);
+		});
+	});
+}
+</script>
+{% endblock %}

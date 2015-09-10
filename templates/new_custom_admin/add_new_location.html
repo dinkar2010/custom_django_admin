@@ -1,0 +1,356 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+
+<div class="page page-maps-google">
+
+	<div class="pageheader">
+
+		<h2>New Locations</h2>
+
+		<div class="page-bar">
+
+			<ul class="page-breadcrumb">
+				<li>
+					<a href="/admin/"><i class="fa fa-home"></i> MovinCart</a>
+				</li>
+				<li>
+					<a href="#">Maps</a>
+				</li>
+				<li>
+					<a href="#">New Locations</a>
+				</li>
+			</ul>
+
+		</div>
+
+	</div>
+
+	<!-- row -->
+	<div class="row">
+	<!-- col -->
+		<div class="col-md-12">
+
+			<!-- tile -->
+			<section class="tile">
+
+				<!-- tile header -->
+				<div class="tile-header dvd dvd-btm">
+					<h1 class="custom-font"><strong>New</strong> Locations</h1>
+					<ul class="controls">
+						<li class="dropdown">
+
+							<a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
+								<i class="fa fa-cog"></i>
+								<i class="fa fa-spinner fa-spin"></i>
+							</a>
+
+							<ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+								<li>
+									<a role="button" tabindex="0" class="tile-toggle">
+										<span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
+										<span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
+									</a>
+								</li>
+								<li>
+									<a role="button" tabindex="0" class="tile-refresh"><i class="fa fa-refresh"></i> Refresh</a>
+								</li>
+								<li>
+									<a role="button" tabindex="0" class="tile-fullscreen"><i class="fa fa-expand"></i> Fullscreen</a>
+								</li>
+							</ul>
+
+						</li>
+						<li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>
+					</ul>
+				</div>
+				<!-- /tile header -->
+
+				<!-- tile body -->
+				<div class="tile-body">
+					<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					<div id="basic-map" style="height: 600px;"></div>
+				</div>
+				<!-- /tile body -->
+				<div class="tile-body">
+				<form action="/admin/app/location/add/" class="form-inline" method="POST" role="form" id="add_location_form">
+					{% csrf_token %}
+
+					<input  type="hidden"  autocomplete="off" id="l_coord" name="l_coord"class="form-control">
+
+					<div class="form-group">
+						<label class="sr-only" for="exampleInputEmail2">City</label>
+						<input type="text" class="form-control" autocomplete="off" required id="l_city" name="l_city" placeholder="Enter City">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="exampleInputPassword2">Zone</label>
+						<input class="form-control" autocomplete="off" id="l_zone" name="l_zone" placeholder="Enter Zone">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="exampleInputPassword2">Area</label>
+						<input class="form-control" autocomplete="off" id="l_area" name="l_area" placeholder="Enter Area">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="exampleInputPassword2">Sub Area</label>
+						<input class="form-control" autocomplete="off" id="l_sub_area" name="l_sub_area" placeholder="Enter Sub Area">
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-rounded btn-success"> Save </button>
+					</div>
+					<a type="button" onclick="removeRecentPoint()"class="myIcon icon-success icon-ef-3 icon-ef-3a hover-color"><i class="fa fa-refresh"></i></a>
+					<a type="button" onclick="makeEditable()"class="myIcon icon-success icon-ef-3 icon-ef-3a hover-color"><i class="fa fa-play"></i></a>
+					<a type="button" onclick="deletePolygon()" class="myIcon icon-danger icon-ef-3 icon-ef-3a hover-color"><i class="fa fa-trash-o"></i></a>
+				</form>
+			</div>			<!-- /tile -->
+			</section>			<!-- tile -->
+			<!-- tile -->
+			<!-- /tile -->
+		</div>
+		<!-- /col -->
+	</div>
+	<!-- /row -->
+</div>
+		<!--/ CONTENT -->
+        <!--/ Application Content -->
+{% endblock %}
+
+    <!-- /#wrapper -->
+{% block jscontent %}
+
+
+
+<script type="text/javascript"
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNent3rKW1eCE6AEQ185rZ4Jac8dGcNBg">
+</script>
+<script
+	src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true">
+</script>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false">
+</script>
+<script type="text/javascript">
+	var areaCoordinates = [];
+	var geocoder;
+	var uniqueId = 1;
+	var editFlag = 0;
+	var mapOptions = {
+		center: { lat: 19.118371, lng: 72.907281},
+		zoom: 8
+	};
+	var map = new google.maps.Map(document.getElementById('basic-map'),mapOptions);
+	map.setZoom(13);
+	var myPoly = new google.maps.Polygon({
+		path: [],
+		strokeColor: "#FF0000",
+		strokeOpacity: 1.0,
+		editable:true,
+		draggable: true,
+		strokeWeight: 2,
+		map: map
+	});
+	myPoly.setMap(map);
+	geocoder = new google.maps.Geocoder();
+	<!--var input = /** @type {HTMLInputElement} */(document.getElementById('pac_input'));-->
+	<!--get element by id for placing search box-->
+	var input = document.getElementById('pac-input');
+	var searchBox = new google.maps.places.SearchBox(input);  <!--create search box-->
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input); <!--search box position-->
+	<!--bounds for search on map-->
+	map.addListener('bounds_changed', function() {
+		searchBox.setBounds(map.getBounds());
+	});
+	var autocomplete = new google.maps.places.Autocomplete(input);
+	// Function to initialize polygon creation
+	function initialize() {
+		{% for polygon,loc in polygons %}
+			var prev_areaCoordinates = [];
+			var line = new google.maps.Polygon({
+				path: areaCoordinates,
+				strokeColor: "#32CD32",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+				fillColor: '#32CD32',
+				fillOpacity:0.35,
+				map: map
+			});
+			{% for point in polygon %}
+				var point1= new google.maps.LatLng({{point.0}}, {{point.1}});
+				prev_areaCoordinates.push(point1);
+				line.setPath(prev_areaCoordinates);
+				line.setMap(map);
+
+			{% endfor %}
+			info= [];
+			google.maps.event.addListener(line, 'mouseover', function(e) {
+				var latitude=e.latLng.lat();
+				var longitude=e.latLng.lng();
+				var latlng = {lat: latitude, lng:longitude};
+				var service_location="{{loc.sub_area}}"+","+"{{loc.area}}";
+				this.setOptions({fillOpacity: 0.6});
+				info=new google.maps.InfoWindow({
+					content:service_location
+				})
+				info.setPosition(latlng);
+				info.open(map);
+			});
+			google.maps.event.addListener(line, 'mouseout', function() {
+				info.close();
+			});
+		{% endfor %}
+		var window = [];
+		searchBox.addListener('places_changed', function() {
+			var places = searchBox.getPlaces();
+			if (places.length == 0) {
+				return;
+			}
+			window.forEach(function(locality) {
+				locality.setMap(null);
+			});
+			window = [];
+			var bounds = new google.maps.LatLngBounds();
+			places.forEach(function(place) {
+				var icon = {
+					url: place.icon,
+					size: new google.maps.Size(71, 71),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(17, 34),
+					scaledSize: new google.maps.Size(25, 25)
+				};
+			// Create a info window for each searched place.
+
+			window.push(new google.maps.InfoWindow({
+				map: map,
+				icon: icon,
+				content: place.name,
+				position: place.geometry.location
+			}));
+			if (place.geometry.viewport) {
+				bounds.union(place.geometry.viewport);
+			}
+			else {
+				bounds.extend(place.geometry.location);
+			}
+		});
+		});
+		map.fitBounds(bounds);
+
+		if (!editFlag) {
+			//alert("noteditable");
+			return;
+		}
+		//alert("buggytheclown");
+		google.maps.event.addListener(myPoly, 'dragend', function(){
+			alert("drag functionality not operative, please contact the tech team, please delete the polygon and reconstruct it");
+		});
+		//alert("before_insertion");
+		areaCoordinates = myPoly.getPath();
+		google.maps.event.addListener(myPoly.getPath(), 'set_at', function(){
+			createPolygonList(myPoly.getPath());
+		});
+		google.maps.event.addListener(myPoly.getPath(), 'insert_at', function(){
+			createPolygonList(myPoly.getPath());
+		});
+		google.maps.event.addListener(myPoly.getPath(), 'remove_at', function() {
+			createPolygonList(myPoly.getPath());
+		});
+		google.maps.event.addListener(map, 'click', function(event) {
+			areaCoordinates.push(event.latLng);
+			myPoly.setPath(areaCoordinates);
+			myPoly.setMap(map);
+		});
+	}
+	google.maps.event.addDomListener(window, 'load', initialize);
+	//Adds marker to the map, used for marking the starting point of polygon
+	//Removes the most recent point while adding new location
+	function removeRecentPoint(){
+		if (myPoly.getPath().getLength() === 0){
+			alert("There is no Point to remove");
+			return;
+		}
+		areaCoordinates = myPoly.getPath();
+		areaCoordinates.pop();
+		myPoly.setPath(areaCoordinates);
+		myPoly.setMap(map);
+		createPolygonList(myPoly.getPath());
+	}
+	// To enable a user to create polygons
+	function makeEditable(){
+		if (!editFlag){
+			editFlag = 1;
+			initialize();
+		}
+		return;
+	}
+	// Deletes the entire polygon
+	function deletePolygon(){
+		var flag = confirm("Do you want to delete the polyogn");
+		if (!flag) return;
+			areaCoordinates=[];
+			document.getElementById('l_coord').value="";
+			myPoly.setPath(areaCoordinates);
+			myPoly.setMap(map);
+			}
+	// sets the center of the map to input address
+	function codeAddress() {
+		var address = document.getElementById("pac_input").value;
+		geocoder.geocode( { 'address': address}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				map.setCenter(results[0].geometry.location);
+				var marker = new google.maps.Marker({
+					map: map,
+					position: results[0].geometry.location
+				});
+			} else {
+				alert("Geocode was not successful for the following reason: " + status);
+			}
+		});
+	}
+	function submit_form(){
+		var polygon_check= $("#l_coord").val();
+		var city_check= $("#l_city").val();
+		var area_check= $("#l_area").val();
+		var zone_check= $("#l_zone").val();
+		var sub_area_check= $("#l_sub_area").val();
+		if(city_check==""){
+			alert("Please Enter City");
+			return false;
+		}
+		if(polygon_check==""){
+			alert("Please Enter polygon");
+			return false;
+		}
+		if(area_check==""){
+			alert("Please Enter area");
+			return false;
+		}
+		if(sub_area_check==""){
+			alert("Please Enter Sub Area");
+			return false;
+		}
+		if(zone_check==""){
+			alert("Please Enter Zone");
+			return false;
+		}
+		if(polygon_check.indexOf("))")>-1){
+			document.getElementById("add_location_form").submit();
+		}else{
+			alert("Please Complete polygon");
+		}
+	}
+	// function creates string to store in DataBase
+	function createPolygonList(pathArray){
+		var poly_list = "POLYGON((";
+		for(i = 0 ; i < pathArray.getLength(); i++){
+			poly_list = poly_list + pathArray.getAt(i).lat() + " " + pathArray.getAt(i).lng() + ",";
+		}
+		poly_list = poly_list + pathArray.getAt(0).lat() + " " + pathArray.getAt(0).lng() + "))";
+		document.getElementById('l_coord').value=poly_list;
+		return poly_list;
+	}
+</script>
+<!--/ Page Specific Scripts -->
+{% endblock %}
+</body>
+<!-- Mirrored from www.tattek.sk/minovate-noAngular/maps-google.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 27 Jun 2015 12:57:53 GMT -->
+</html>

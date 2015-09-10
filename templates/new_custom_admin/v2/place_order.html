@@ -1,0 +1,201 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+<link rel="stylesheet" href="{% static "jquery/json_viewer/css/jjsonviewer.css"%}">
+<div class="page coupon-single-coupon-page">
+	<div class="pageheader">
+		<h2 class="page-header">Test API</h2>
+		<div class="page-bar">
+			<ul class="page-breadcrumb">
+				<li>
+					<a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+				</li>
+				<li>
+					<a href="order_status">Placed Order Status API Detail</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="add-nav">
+		<div role="tabpanel">
+			<!-- Nav tabs -->
+			<div class="tab-content">
+				<!-- tab in tabs -->
+				<div role="tabpanel" class="tab-pane active" id="details">
+					<!-- row -->
+					<div class="row">
+						<!-- col -->
+						<div class="col-md-12">
+							<!-- tile -->
+							<form action="" method="POST" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form" id="form_id">
+								{% csrf_token %}
+								<section class="tile">
+									<!-- tile header -->
+									<div class="tile-header dvd dvd-btm">
+										<h1 class="custom-font"><strong>Place Order Status API Details </strong></h1>
+									</div>
+									<!-- /tile header -->
+									<!-- tile body -->
+									<div class="form-group">
+										<label for="phone_number" class="col-sm-2 control-label">Phone No: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="phone_number" type="value"  class="form-control" id="phone_id" placeholder="Phone Number" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="username" class="col-sm-2 control-label">userName: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="userName" type="value"  class="form-control" id="name_id" placeholder="Username" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="email" class="col-sm-2 control-label">Email: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="email" type="value"  class="form-control" id="email_id" placeholder="dinkar2010@movincart.com" style="width:100%" disabled>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="app_version" class="col-sm-2 control-label">App Version: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="app_version" type="value"  class="form-control" id="app_version_id" placeholder="33" style="width:100%" disabled>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="device_id" class="col-sm-2 control-label">Device ID: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="device_id" type="value"  class="form-control" id="device_id" placeholder="00000000-2593-5ca6-ffff-fffff2d28659" style="width:100%" disabled>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="app_id" class="col-sm-2 control-label">App ID: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="app_id" type="value"  class="form-control" id="app_id" placeholder="APP ID" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="bring_charge_of" class="col-sm-2 control-label">Bring Charge Of: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="bring_change_of" type="value"  class="form-control" id="change_id" placeholder="Bring Change" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="address" class="col-sm-2 control-label">Address: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="address" type="value"  class="form-control" id="address_id" placeholder="Address" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="landmark" class="col-sm-2 control-label">Landmark: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="landmark" type="value"  class="form-control" id="mark_id" placeholder="Landmark" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="location_show" class="col-sm-2 control-label">Location Show: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="location_show" type="value"  class="form-control" id="show_id" placeholder="Location Show" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="location" class="col-sm-2 control-label">Location ID <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="location_id" type="value"  class="form-control" id="location_id" placeholder="location ID" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="api_key" class="col-sm-2 control-label">API Key: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="api_key" type="value"  class="form-control" id="api_key_id" placeholder="API Key" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="product" class="col-sm-2 control-label">Product: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="products" type="value"  class="form-control" id="product_id" placeholder="product" style="width:100%">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="coupon_id" class="col-sm-2 control-label">Coupon ID: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-6">
+											<input required name="coupon_id" type="value"  class="form-control" id="coupon_id" placeholder="product" style="width:100%">
+										</div>
+									</div>
+									<ul class="pager">
+										<li>
+											<a href="#" onclick="validate_n_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Save"><i>Submit</i></a>
+										</li>
+									</ul>
+								</section>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id = "placeholder">
+		<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
+		<img src="http://preloaders.net/preloaders/344/Train%20running.gif" width="64" height="64" /><br>Loading..
+	</div>
+</div>
+{% endblock %}
+{% block jscontent %}
+<script src="{% static "jquery/json_viewer/js/jjsonviewer.js"%}">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+		$(document).ajaxStart(function(){
+			$("#wait").css("display", "block");
+		});
+		$(document).ajaxComplete(function(){
+			$("#wait").css("display", "none");
+		});
+	validate_n_submit=function()
+	{
+		var div_id=$('#detail');
+		var contact=document.getElementById("phone_id").value;
+		var name=document.getElementById("name_id").value;
+		var email=document.getElementById("email_id").value;
+		var app_id=document.getElementById("app_id").value;
+		var change_id=document.getElementById("change_id").value;
+		var address=document.getElementById("address_id").value;
+		var mark=document.getElementById("mark_id").value;
+		var show=document.getElementById("show_id").value;
+		var location=document.getElementById("location_id").value;
+		var api_key=document.getElementById("api_key_id").value;
+		var product_id=document.getElementById("product_id").value;
+		var device_id=document.getElementById("device_id").value;
+		var coupon=document.getElementById("coupon_id").value;
+
+		console.log(contact,name,email);
+
+		<!--var urls ='/api/v2/place_order';-->
+
+		<!--var param=-->
+		<!--$.ajax({-->
+			<!--url:urls,-->
+			<!--type: "POST",-->
+			<!--data: {'contact':contact,'name':name,'email':email,'app_id':app_id,-->
+					<!--'change_id':change_id,'address':address,'mark':mark,'show':show,-->
+					<!--'location':location,'api_key':api_key,'product':product_id,-->
+					<!--'device':device_id,'coupon':coupon,-->
+				  <!--},-->
+			<!--dataType: "json",-->
+			<!--success: function (result) {-->
+				<!--switch (result) {-->
+					<!--case true:-->
+						<!--processResponse(result);-->
+						<!--break;-->
+					<!--default:-->
+						<!--div_id.html(result);-->
+				<!--}-->
+			<!--},-->
+			<!--error: function (xhr, ajaxOptions, thrownError) {-->
+			<!--alert(urls);-->
+			<!--}-->
+		<!--});-->
+	};
+});
+</script>
+{% endblock %}

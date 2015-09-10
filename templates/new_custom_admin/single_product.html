@@ -1,0 +1,635 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+
+    <div class="page page-shop-single-product">
+
+        <div class="pageheader">
+
+            <h2>Single Product</h2>
+
+            <div class="page-bar">
+
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="index-2.html"><i class="fa fa-home"></i> MovinCart</a>
+                    </li>
+                    <li>
+                        <a href="#">Store</a>
+                    </li>
+                    <li>
+                        <a href="shop-single-product.html">Single Product</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="pagecontent">
+
+
+
+            <div class="add-nav">
+                <div class="nav-heading">
+                    <h3>Product Details : <strong class="text-greensea">#{{custom_product.product.id}}</strong></h3>
+                    <span class="controls pull-right">
+                      <a href="/admin/app/storeproductmapping/" class="btn btn-ef btn-ef-1 btn-ef-1-default btn-ef-1a btn-rounded-20 mr-5" data-toggle="tooltip" title="Back"><i class="fa fa-times"></i></a>
+                      <a onClick="save_product()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1a btn-rounded-20 mr-5" data-toggle="tooltip" title="Save"><i class="fa fa-check"></i></a>
+                    </span>
+                </div>
+
+                <div role="tabpanel">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
+                        <li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
+                        <li role="presentation"><a href="#meta" aria-controls="meta" role="tab" data-toggle="tab">Meta</a></li>
+                        <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+                        <li role="presentation"><a href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab">Reviews</a></li>
+                        <li role="presentation"><a href="#historyTab" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane active" id="details">
+
+
+
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+
+                                    <!-- tile -->
+                                    <section class="tile time-simple">
+
+                                        <!-- tile body -->
+                                        <div class="tile-body">
+
+
+                                            <!-- row -->
+                                            <div class="row">
+
+                                                <!-- col -->
+                                                <div class="col-md-4" data-lightbox="gallery">
+
+                                                    <a href="{{custom_product.product.product.image}}" class="img-link" data-lightbox="gallery-item">
+                                                        <img src="{{custom_product.product.product.image}}" alt="" class="img-responsive mb-20">
+                                                    </a>
+
+                                                    <!-- row thumbnails -->
+                                                    <div class="row">
+
+                                                        <!-- col -->
+                                                        <div class="col-md-3 wrap-reset p-10 ml-5">
+                                                            <a href="{{custom_product.product.product.image}}" class="img-link" data-lightbox="gallery-item">
+                                                                <img src="{{custom_product.product.product.image}}" alt="" class="img-responsive mb-10">
+                                                            </a>
+                                                        </div>
+                                                        <!-- /col -->
+                                                    </div>
+                                                    <!-- /row -->
+
+                                                </div>
+                                                <!-- /col -->
+
+                                                <!-- col -->
+                                                <div class="col-md-8">
+
+                                                    <h2 class="custom-font mb-5">{{custom_product.product.product.product.name}}
+                                                    {% if custom_product.product.stock %}
+                                                        <span class="label label-success">Available</span></h2>
+                                                    {% else %}
+                                                        <span class="label bg-danger">Not Available</span></h2>
+                                                    {% endif %}
+
+                                                    <p class="desc text-default lt mb-20">{{custom_product.product.product.product.description}}</p>
+
+                                                    <p class="tags">
+                                                    {% for tag in custome_product.product.product.product.tags  %}
+                                                        <span class="label label-default mr-5">{{tag.name}}</span>
+                                                    {% endfor %}
+
+
+                                                    </p>
+
+                                                    <h3 class="price mt-40 mb-0 text-success ng-binding">&#8377;{{custom_product.product.price | stringformat:'d' }} / <small>{{custom_product.product.product.size.magnitude | stringformat:'d' }} {{custom_product.product.product.size.unit}}</small></h3>
+                                                    <p class="discount text-sm text-default lt">Discount: &#8377;{{custom_product.product.discount | stringformat:'d' }}</p>
+                                                </div>
+                                                <!-- /col -->
+
+                                            </div>
+                                            <!-- /row -->
+
+
+                                        </div>
+                                        <!-- /tile body -->
+
+                                    </section>
+                                    <!-- /tile -->
+
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+
+
+                        </div>
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane" id="general">
+
+
+
+
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+
+
+                                    <!-- tile -->
+                                    <section class="tile">
+
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Edit </strong> General Informations</h1>
+                                        </div>
+                                        <!-- /tile header -->
+
+
+                                        <!-- tile body -->
+                                        <div class="tile-body">
+
+                                            <form action="/movinCartAdmin/edit_product_info/" method="POST" role="form" id="edit_product_form"class="form-horizontal ng-pristine ng-valid" >
+                                                {% csrf_token %}
+
+
+                                                <div class="form-group">
+                                                    <label for="id" class="col-sm-2 control-label">ID: </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="id" placeholder="Item ID" value="{{custom_product.product.id}}" disabled="">
+                                                        <input type="hidden" class="form-control" id="id" placeholder="Item ID" name="p_id"value="{{custom_product.product.id}}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="store" class="col-sm-2 control-label">Store: </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="store" placeholder="Item ID" value="{{custom_product.product.store.name}}" disabled="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">Name: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="name" name="p_name" placeholder="Item Name" value="{{custom_product.product.product.product.name}} ">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="b_name" class="col-sm-2 control-label">Brand Name: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="p_brand"class="form-control" id="b_name" placeholder="Item Name" value="{{custom_product.product.product.product.brand_name}} ">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="b_name" class="col-sm-2 control-label">Display Order: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="p_display_order"class="form-control" id="b_name" placeholder="Item Name" value="{{custom_product.product.display_order}} ">
+                                                </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="description"  class="col-sm-2 control-label">Description: </label>
+                                                    <div class="col-sm-10">
+                                                    <textarea class="form-control" name="p_desc" id="description" placeholder="Item Description" rows="5">{{custom_product.product.product.product.description}}
+                                                    </textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="category" class="col-sm-2 control-label">Category: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <select tabindex="3" id="category" name="p_category" class="chosen-select" style="width: 100%;">
+                                                        {% for key,value in custom_product.category_vise_sub_categories.items %}
+                                                            <optgroup label="{{key}}">
+                                                                {% for sub_cat in value  %}
+                                                                    <option {% if custom_product.product.product.product.category.id == sub_cat.id %}
+                                                                        selected
+                                                                    {% endif %} value="{{sub_cat.id}}">{{sub_cat.name}}</option>
+                                                                {% endfor %}
+                                                            </optgroup>
+                                                        {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="price" class="col-sm-2 control-label">Price: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="p_price" value="{{custom_product.product.price | stringformat:'d'}}" id="price" class="form-control touchspin" data-min='0' data-max="100000" data-step="1"  data-stepinterval="50" data-maxboostedstep="100000" data-prefix="&#8377;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="discount" class="col-sm-2 control-label">Discount: </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="p_discount" value="{{custom_product.product.discount | stringformat:'d'}}" id="discount" data-step="1" class="form-control touchspin" data-min='0' data-max="1000" data-boostat="5" data-maxboostedstep="10" data-prefix="&#8377;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="unit" class="col-sm-2 control-label" >Size: </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="p_size" disabled class="form-control" id="name" placeholder="Item Name" value="{{custom_product.product.product.size.magnitude | stringformat:'d'}} {{custom_product.product.product.size.unit}}">
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="status" class="col-sm-2 control-label">Status: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <select tabindex="3" name="p_stock" id="status" class="chosen-select" style="width: 100%;">
+                                                            <option {% if custom_product.product.stock %}
+                                                                selected
+                                                            {% endif %} value="1">Available</option>
+                                                            <option {% if not custom_product.product.stock %}
+                                                                selected
+                                                            {% endif %}value="0">Unavailable</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+
+
+                                        </div>
+                                        <!-- /tile body -->
+
+                                    </section>
+                                    <!-- /tile -->
+
+
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+
+
+
+
+                        </div>
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane" id="meta">
+
+
+
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+
+
+                                    <!-- tile -->
+                                    <section class="tile">
+
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Edit </strong> Meta Informations</h1>
+                                            <ul class="controls">
+                                                <li><a href="#" onclick="document.getElementById('tags_form').submit()"><i class="fa fa-save mr-5"></i> Save</a></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- /tile header -->
+
+
+                                        <!-- tile body -->
+                                        <div class="tile-body">
+
+
+                                            <form class="form-horizontal ng-pristine ng-valid" method="GET" action="/movinCartAdmin/save_tags_for_product/{{ custom_product.product.id }}/"role="form" id="tags_form">
+
+                                                <div class="form-group">
+                                                    <label for="title" class="col-sm-2 control-label">Title:</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="title" placeholder="Meta Title" disabled value="{{ custom_product.product.product.product.name }}">
+                                                        <span class="help-block">max 100 chars</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="keywords" class="col-sm-2 control-label">Keywords:</label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="form-control" id="keywords" name="p_tags"placeholder="Meta Keywords" rows="8">{% for tag in custom_product.product.product.product.tags.all  %}{{ tag.name }},{% endfor %}</textarea>
+                                                        <span class="help-block">max 1000 chars, Comma Seperated keywords</span>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                                        <!-- /tile body -->
+
+                                    </section>
+                                    <!-- /tile -->
+
+
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+
+
+                        </div>
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane" id="images">
+
+
+
+
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+
+
+                                    <!-- tile -->
+                                    <section class="tile">
+
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Edit </strong> Images</h1>
+                                            <ul class="controls">
+                                                <li><a href="javascript:;"><i class="fa fa-plus"></i> Add Image</a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- /tile header -->
+
+
+                                        <!-- tile body -->
+                                        <div class="tile-body" id="image_div">
+
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width: 110px">Image</th>
+                                                        <th>Path</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody data-lightbox="gallery">
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{custom_product.product.product.image}}" class="img-link" data-lightbox="gallery-item">
+                                                                <img src="{{custom_product.product.product.image}}" alt="" class="thumb thumb-lg">
+                                                            </a>
+                                                        </td>
+                                                        <td><input type="text" class="form-control" id="product_image"placeholder="Image Label" value="{{custom_product.product.product.image}}"></td>
+                                                        <td>
+                                                            <button type="button" onclick="refresh_image()" class="btn btn-xs btn-success"><i class="fa fa-upload"></i> Upload</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <!-- /tile body -->
+                                    </section>
+                                    <!-- /tile -->
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+                        </div>
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane" id="reviews">
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+                                    <!-- tile -->
+                                    <section class="tile">
+
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Product </strong> Reviews</h1>
+                                        </div>
+                                        <div class="tile-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Rating</th>
+                                                        <th>Review Date</th>
+                                                        <th>Customer</th>
+                                                        <th>Content</th>
+                                                        <th>Status</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><a href="javascript:;">1</a></td>
+                                                        <td><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star-half-o text-orange"></i><i class="fa fa-star-o"></i></td>
+                                                        <td>Jan 20, 2015</td>
+                                                        <td>Customer 1</td>
+                                                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+                                                        <td><span class="label label-success">approved</span></td>
+                                                        <td>
+                                                            <a href="javascript:;" class="btn btn-xs btn-default"><i class="fa fa-search"></i> View</a>
+                                                            <a href="javascript:;" class="btn btn-xs btn-lightred"><i class="fa fa-times"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">2</a></td>
+                                                        <td><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star-half-o text-orange"></i><i class="fa fa-star-o"></i></td>
+                                                        <td>Jan 20, 2015</td>
+                                                        <td>Customer 2</td>
+                                                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+                                                        <td><span class="label label-success">approved</span></td>
+                                                        <td>
+                                                            <a href="javascript:;" class="btn btn-xs btn-default"><i class="fa fa-search"></i> View</a>
+                                                            <a href="javascript:;" class="btn btn-xs btn-lightred"><i class="fa fa-times"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">3</a></td>
+                                                        <td><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star-half-o text-orange"></i><i class="fa fa-star-o"></i></td>
+                                                        <td>Jan 21, 2015</td>
+                                                        <td>Customer 3</td>
+                                                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+                                                        <td><span class="label label-warning">pending</span></td>
+                                                        <td>
+                                                            <a href="javascript:;" class="btn btn-xs btn-default"><i class="fa fa-search"></i> View</a>
+                                                            <a href="javascript:;" class="btn btn-xs btn-lightred"><i class="fa fa-times"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">4</a></td>
+                                                        <td><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star-half-o text-orange"></i><i class="fa fa-star-o"></i></td>
+                                                        <td>Jan 21, 2015</td>
+                                                        <td>Customer 4</td>
+                                                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+                                                        <td><span class="label label-danger">rejected</span></td>
+                                                        <td>
+                                                            <a href="javascript:;" class="btn btn-xs btn-default"><i class="fa fa-search"></i> View</a>
+                                                            <a href="javascript:;" class="btn btn-xs btn-lightred"><i class="fa fa-times"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">5</a></td>
+                                                        <td><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star text-orange"></i><i class="fa fa-star-half-o text-orange"></i><i class="fa fa-star-o"></i></td>
+                                                        <td>Jan 21, 2015</td>
+                                                        <td>Customer 5</td>
+                                                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+                                                        <td><span class="label label-danger">rejected</span></td>
+                                                        <td>
+                                                            <a href="javascript:;" class="btn btn-xs btn-default"><i class="fa fa-search"></i> View</a>
+                                                            <a href="javascript:;" class="btn btn-xs btn-lightred"><i class="fa fa-times"></i> Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <!-- /tile body -->
+
+                                    </section>
+                                    <!-- /tile -->
+
+
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+
+
+
+
+                        </div>
+                        <!-- tab in tabs -->
+                        <div role="tabpanel" class="tab-pane" id="historyTab">
+
+
+
+
+
+                            <!-- row -->
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-md-12">
+
+
+
+
+
+                                    <!-- tile -->
+                                    <section class="tile tile">
+
+                                        <!-- tile header -->
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Product </strong> History</h1>
+                                        </div>
+                                        <!-- /tile header -->
+
+                                        <!-- tile body -->
+                                        <div class="tile-body p-0">
+
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Desription</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><a href="javascript:;">1</a></td>
+                                                        <td>Product Created</td>
+                                                        <td>Jan 20, 2015</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">2</a></td>
+                                                        <td>Product is available</td>
+                                                        <td>Jan 20, 2015</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">3</a></td>
+                                                        <td>Product updated</td>
+                                                        <td>Jan 21, 2015</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">4</a></td>
+                                                        <td>Product is unavailable</td>
+                                                        <td>Jan 21, 2015</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <!-- /tile body -->
+
+                                    </section>
+                                    <!-- /tile -->
+
+
+                                </div>
+                                <!-- /col -->
+                            </div>
+                            <!-- /row -->
+
+
+
+
+                        </div><!-- end ngRepeat: tab in tabs -->
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+{% block jscontent %}
+    <script>
+        function refresh_image(){
+            var p_id = $('#id').val();
+            var p_image = $('#product_image').val();
+            if(p_image!=''){
+                var ref_image = '/movinCartAdmin/change_image/?product_id='+p_id+'&product_image='+encodeURIComponent(p_image);
+                document.getElementById("image_div").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+                $('#image_div').load(ref_image, function(){
+
+                  });
+            }
+        }
+        function save_product(){
+            document.getElementById("edit_product_form").submit();
+        }
+    </script>
+{% endblock %}

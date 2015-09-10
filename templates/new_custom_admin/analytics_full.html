@@ -1,0 +1,167 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+{% block body_class_content %}
+class="appWrapper sidebar-sm-forced"
+{% endblock %}
+
+{% block bodycontent %}
+
+<div class="page page-dashboard">
+
+    <div class="pageheader">
+
+        <h2>Analytics</h2>
+
+        <div class="page-bar">
+
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                </li>
+                <li>
+                    <a href="#">Analytics</a>
+                </li>
+                <form id="date_form" action="/movinCartAdmin/analytics/" style="display: none;" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="date_range_input" name="date_range_input">
+                </form>
+            </ul>
+
+            <div class="page-toolbar">
+
+                <a id='date_range' role="button" tabindex="0" class="btn btn-lightred no-border pickDate">
+                    <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span id="date_range_span">{{ date_selected }}</span>&nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+                </a>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="pagecontent">
+        <div class="row">
+                <!-- col -->
+                <div class="col-md-8">
+                    <!-- tile -->
+                    <section class="tile">
+
+                        <!-- tile header -->
+                        <div class="tile-header dvd dvd-btm">
+                            <h1 class="custom-font"><strong>Sales </strong></h1>
+                        </div>
+                        <div class="tile-body" id="sales_graph">
+
+                        </div>
+                        <!-- /tile body -->
+                    </section>
+                </div>
+                <div class="col-md-4">
+                    <!-- tile -->
+                    <section class="tile">
+                        <!-- tile header -->
+                        <div class="tile-header dvd dvd-btm">
+                            <h1 class="custom-font"><strong>New/Repeated </strong>Users</h1>
+                        </div>
+                        <!-- /tile header -->
+                        <!-- tile body -->
+                        <div class="tile-body" id="users_graph">
+
+                        </div>
+                        <!-- /tile body -->
+                    </section>
+                </div>
+        </div>
+        <div class="row">
+            <!-- col -->
+            <div class="col-md-12">
+
+                <!-- tile -->
+                    <section class="tile">
+
+                        <!-- tile header -->
+                        <div class="tile-header dvd dvd-btm">
+                            <h1 class="custom-font"><strong>Orders</strong>Chart</h1>
+                        </div>
+                        <!-- /tile header -->
+
+                        <!-- tile body -->
+                        <div class="tile-body" id="orders_graph">
+
+
+
+                        </div>
+                        <!-- /tile body -->
+
+                    </section>
+
+            </div>
+        </div>
+        <div class="row">
+            <!-- col -->
+            <div class="col-md-12">
+
+                <!-- tile -->
+                    <section class="tile">
+
+                        <!-- tile header -->
+                        <div class="tile-header dvd dvd-btm">
+                            <h1 class="custom-font"><strong>Categories</strong> Ordered</h1>
+                        </div>
+                        <!-- /tile header -->
+
+                        <!-- tile body -->
+                        <div class="tile-body" id="category_ordered_graph">
+
+
+
+                        </div>
+                        <!-- /tile body -->
+
+                    </section>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block jscontent %}
+    <script type="text/javascript" >
+    var sales_graph = '/movinCartAdmin/analytics/balance_analytics/?date_range_input='+encodeURIComponent('{{ date_selected }}');
+        document.getElementById("sales_graph").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+	    $('#sales_graph').load(sales_graph, function(){
+
+	    });
+    var users_graph = '/movinCartAdmin/analytics/new_repeated_users/?date_range_input='+encodeURIComponent('{{ date_selected }}');
+        document.getElementById("users_graph").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+	    $('#users_graph').load(users_graph, function(){
+
+	    });
+    var orders_graph = '/movinCartAdmin/analytics/orders_analytics/?date_range_input='+encodeURIComponent('{{ date_selected }}');
+        document.getElementById("orders_graph").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+	    $('#orders_graph').load(orders_graph, function(){
+
+	    });
+    var category_ordered_graph = '/movinCartAdmin/analytics/category_ordered/?date_range_input='+encodeURIComponent('{{ date_selected }}');
+        document.getElementById("category_ordered_graph").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+	    $('#category_ordered_graph').load(category_ordered_graph, function(){
+
+	    });
+    $(window).load(function() {
+        {% if date_selected %}
+            $("#date_range_span").html("{{ date_selected }}");
+        {% endif %}
+        $('#date_range').bind('DOMSubtreeModified', function (e) {
+            $("#date_range_input").val($('#date_range').text().trim());
+            document.forms['date_form'].submit();
+        });
+
+
+    });
+
+</script>
+{% endblock %}

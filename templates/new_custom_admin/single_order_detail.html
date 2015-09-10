@@ -1,0 +1,1113 @@
+{% extends "new_custom_admin/base.html" %}
+{% load extra_filter %}
+{% load static %}
+
+{% block body_class_content %}
+class="appWrapper sidebar-xs-forced device-lg scheme-default default-scheme-color header-fixed aside-fixed rightbar-hidden sidebar-xs"
+{% endblock %}
+
+{% block bodycontent %}
+<div class="page page-shop-single-order">
+
+                    <div class="pageheader">
+
+                        <h2>Single Order </h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="/admin/"><i class="fa fa-home"></i> MovinCart</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/app/order/">Orders</a>
+                                </li>
+                                <li>
+                                    <a href="#">Single Order</a>
+                                </li>
+                            </ul>
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="pagecontent">
+
+
+                        <div class="add-nav">
+                            <div class="nav-heading">
+                                <h3>Order Details : <strong class="text-greensea">#{{custom_order.order.id}}</strong></h3>
+                                <span class="controls pull-right">
+                                {% if perms.app.can_change_order_status %}
+                                    {% if custom_order.order.status == 3 %}
+                                            <button type="button" onclick="processed_order({{custom_order.order.id}})" class="btn btn-blue btn-rounded-20 mb-10">Place Order</button>
+                                    {% endif %}
+                                    {% if custom_order.order.status != 0 and custom_order.order.status != 1 or request.user|has_group:"Ops Head" %}
+                                        {% if custom_order.order.status == 7 %}
+                                            <button type="button" data-toggle="modal" data-target="#splash1" data-options="splash-2 splash-ef-9"class="btn btn-green btn-rounded-20 mb-10">Delivered?</button>
+                                        {% endif %}
+                                        {% if custom_order.order.status != 8 %}
+                                            {% if perms.app.can_change_order_status %}
+                                                <button type="button" data-toggle="modal" data-target="#splash" data-options="splash-2 splash-ef-9"class="btn btn-lightred btn-rounded-20 mb-10">Cancel</button>
+                                            {% endif %}
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endif %}
+                                  
+                                </span>
+                            </div>
+
+                            <div role="tabpanel">
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
+                                    <li role="presentation"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">Invoices</a></li>
+                                    <li role="presentation"><a href="#payments" aria-controls="payments" role="tab" data-toggle="tab">Payments</a></li>
+                                    <li role="presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notes</a></li>
+                                    <li role="presentation"><a href="#historyTab" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane active" id="details">
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile time-simple">
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <!-- row -->
+                                                        <div class="row">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-9">
+                                                                <p class="text-default lt">Created: {{custom_order.order.created_at}}</p>
+                                                                <p class="text-uppercase text-strong mt-40 mb-0 custom-font">Status</p>
+                                                                <h3 class="text-uppercase text-success mt-0 mb-20">
+                                                                    {% if custom_order.order.status == 0 %}
+                                                                          Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 1 %}
+                                                                          Cancelled
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 2 %}
+                                                                          Processed
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 3 %}
+                                                                          Recieved
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 4 %}
+                                                                          Dispatched
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 5 %}
+                                                                          Handed Over
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 6 %}
+                                                                          OLP in proc
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 7 %}
+                                                                          Not Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 8 %}
+                                                                          Delivery CNF By User
+                                                                    {% endif %}
+                                                                </h3>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Order Details</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>ID:</strong> <a href="javascript:;">{{custom_order.order.id}}</a></li>
+                                                                    <li>{{custom_order.order.created_at}}</li>
+                                                                    <li>{{custom_order.order.user.first_name | title }} {{custom_order.order.user.last_name | title }}</li>
+                                                                    <li>{{custom_order.order.address.location.sub_area}}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                        <!-- row -->
+                                                        <div class="row b-t pt-20">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Customer</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong class="inline-block w-xs">Name:</strong> <b>{{custom_order.order.user.first_name | title }} {{custom_order.order.user.last_name | title }}</b></li>
+                                                                    <li><strong class="inline-block w-xs">Location:</strong> {{custom_order.order.address.location.sub_area}}</li>
+                                                                    <li><strong class="inline-block w-xs">Phone:</strong> <b>{{custom_order.order.user.userprofile.contact}}</b></li>
+                                                                    <li><strong class="inline-block w-xs">Email:</strong> <a  href="javascript:;">{{custom_order.order.user.email}}</a></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-5 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    Address
+                                                                    <a href="" onclick="change_editable_address()" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>
+                                                                </p>
+                                                                <!-- col -->
+                                                                <div class="col-md-6">
+                                                                    <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                        <li><b>{{custom_order.order.address.address | title }}</b></li>
+                                                                        <li><b>{{custom_order.order.address.landmark | title }}</b></li>
+                                                                        <li><a  href="javascript:;">{{custom_order.order.address.location_show}}</a></li>
+                                                                        <li class="text-dutch"><strong>{{custom_order.order.address.location.sub_area}}</strong></li>
+                                                                    </ul>
+                                                                    <ul style="display:none;" class="list-unstyled text-darkgray lt mb-20" id="edit_address_ul">
+                                                                        <div class="col-sm-10">
+                                                                            <input type="text" class="form-control rounded" id="input05" value="{{ custom_order.order.address.address }}">
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                                <!-- /col -->
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Delivery &amp; Payment</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>Delivery:</strong> Home-Delivery</li>
+                                                                    <li><strong>Payment:</strong> Cash</li>
+                                                                    <li>{{ custom_order.change_req }}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                                <!-- tile -->
+
+
+                    {% if custom_order.all_in_one %}
+                            {% for serv in custom_order.all_in_one%}
+                                <section class="text-darkgray tile ">
+                                    <div class="tile-header dvd dvd-btm">
+                                         <h1 class="custom-font"><strong>{{serv.name |title }} </strong></h1>
+                                        <ul class="controls">
+                                            <li class="dropdown">
+
+                                                <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </a>
+
+                                                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                                                    <li>
+                                                        <a role="button" tabindex="0" class="tile-toggle">
+                                                            <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
+                                                            <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a role="button" tabindex="0" class="tile-refresh">
+                                                            <i class="fa fa-refresh"></i> Refresh
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a role="button" tabindex="0" class="tile-fullscreen">
+                                                            <i class="fa fa-expand"></i> Fullscreen
+                                                        </a>
+                                                    </li>
+                                                </ul>
+
+                                            </li>
+                                            <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab" id="shopheading{{ forloop.counter }}">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#shopcollapse{{ forloop.counter }}" aria-expanded="false" aria-controls="shopcollapse{{ forloop.counter }}">
+
+                                                    <div class="row">
+                                                        <div class = "col-md-3">
+                                                            {{ serv.store.name }}
+                                                        </div>
+                                                        <div class = "col-md-3">
+                                                            LandLine number:
+                                                            {{ serv.store.contact }}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="shopcollapse{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="shopheading{{ forloop.counter }}">
+                                            <div class="panel-body">
+                                                {{ serv.store.backup_store }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>ID</th>
+                                            <th>Image</th>
+                                            <th>Product Name</th>
+                                            <th>Brand Name</th>
+                                            <th>Size</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+{#                                            <th>Action</th>#}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for p in serv.items %}
+                                            <tr >
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{p.sp.id}}</td>
+                                                <td style="width:5%;"><a target="_blank" href="{{p.sp.product.image}}"><img height="42" width="42" src="{{p.sp.product.image}}"></a></td>
+                                                <td><a href="/admin/app/storeproductmapping/{{p.sp.id}}/" target="_blank"><b>{{p.sp.product.product.name}}</b></a></td>
+                                                <td>{{p.sp.product.product.brand_name}}</td>
+                                                <td class="text-greensea"><b>{{p.size.mag}} {{p.size.unit}}</b></td>
+                                                <td class="text-greensea"><b>{{p.qn}}</b></td>
+                                                <td class="ng-binding"><del>&#8377;{{ p.normal_price }}</del> <strong><font class="text-greensea">&#8377;{{p.price}}</font></strong></td>
+                                                <td class="ng-binding"><del>&#8377;{{ p.normal_total_price }}</del> <strong><font class="text-greensea">&#8377;{{p.total_price}}</font></strong></td>
+{#                                                <td>#}
+{#                                                    <button type="button" onclick="set_id({{ p.sp.id }})" data-toggle="modal" data-target="#splash2" data-options="splash-1 splash-ef-1" class="btn btn-primary btn-rounded btn-ef btn-ef-5 btn-ef-5a mb-10"><i class="fa fa-trash"></i> <span>Delete</span></button>#}
+{#                                                </td>#}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                    <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-4 col-md-offset-8 price-total">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple bg-tr-black lter">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+                                                        <h4 class="panel-title"role="tab" id="totalheading{{ forloop.counter }}">
+                                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#totalcollapse{{ forloop.counter }}" aria-expanded="false" aria-controls="totalcollapse{{ forloop.counter }}">
+                                                            <strong class="inline-block text-darkgray w-sm mb-5">Grand Total:</strong> <h4 class="inline-block text-drank"><b>{% if not serv.total == serv.sub_total %} <del>&#8377;{{ serv.sub_total }}</del> {% endif %} &#8377;{{serv.total}}</b></h4>
+
+                                                            </a>
+                                                        </h4>
+                                                        <div id="totalcollapse{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="totalheading{{ forloop.counter }}">
+                                                            <ul class="list-unstyled text-darkgray">
+                                                                <li class="ng-binding"><strong class="inline-block w-sm mb-5">Subtotal:</strong> &#8377;{{serv.sub_total}}</li>
+                                                                <li class="ng-binding"><strong class="inline-block w-sm mb-5">Shipping:</strong> &#8377;{{serv.delivery_charges}}</li>
+                                                                <li class="ng-binding"><strong class="inline-block w-sm mb-5">Discount:</strong> &#8377;{{serv.coupon_discount}}</li>
+                                                                <li class="ng-binding"><strong class="inline-block w-sm mb-5">Coupon:</strong> {{serv.coupon_code}}</li>
+
+                                                            </ul>
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+
+                                </section>
+                            {% endfor %}
+
+                        {% endif %}
+                        
+                                                <!-- /tile -->
+
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-3 col-md-offset-9 price-total">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple bg-tr-black lter">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+                                                        <ul class="list-unstyled text-darkgray">
+                                                            <li class="ng-binding"><strong class="inline-block w-sm mb-5">Subtotal:</strong> &#8377;{{custom_order.total_without_discount_without_delivery_charges}}</li>
+                                                            <li class="ng-binding"><strong class="inline-block w-sm mb-5">Shipping:</strong> &#8377;{{custom_order.delivery_charges}}</li>
+                                                            <li class="ng-binding"><strong class="inline-block w-sm mb-5">Discount:</strong> &#8377;{{custom_order.discount_money}}</li>
+                                                            <li class="ng-binding"><strong class="inline-block w-sm mb-5">Coupon:</strong> {{custom_order.coupon_code}}</li>
+                                                            <li><strong class="inline-block w-sm">Grand Total:</strong> <h3 class="inline-block text-drank"><b>&#8377;{{custom_order.total_amount}}</b></h3></li>
+                                                        </ul>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+
+
+                                    </div>
+
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane" id="invoices">
+
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile time-simple">
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <!-- row -->
+                                                        <div class="row">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-9">
+                                                                <p class="text-default lt">Created: {{custom_order.order.created_at}}</p>
+                                                                <p class="text-uppercase text-strong mt-40 mb-0 custom-font">Status</p>
+                                                                <h3 class="text-uppercase text-success mt-0 mb-20">
+                                                                    {% if custom_order.order.status == 0 %}
+                                                                          Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 1 %}
+                                                                          Cancelled
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 2 %}
+                                                                          Processed
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 3 %}
+                                                                          Recieved
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 4 %}
+                                                                          Dispatched
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 5 %}
+                                                                          Handed Over
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 6 %}
+                                                                          OLP in proc
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 7 %}
+                                                                          Not Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 8 %}
+                                                                          Delivery CNF By User
+                                                                    {% endif %}
+                                                                </h3>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Order Details</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>ID:</strong> <a href="javascript:;">{{custom_order.order.id}}</a></li>
+                                                                    <li>{{custom_order.order.created_at}}</li>
+                                                                    <li>{{custom_order.order.user.first_name}} {{custom_order.order.user.last_name}}</li>
+                                                                    <li>{{custom_order.order.address.location.sub_area}}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                        <!-- row -->
+                                                        <div class="row b-t pt-20">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Customer</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong class="inline-block w-xs">Name:</strong> {{custom_order.order.user.first_name}} {{custom_order.order.user.last_name}}</li>
+                                                                    <li><strong class="inline-block w-xs">Location:</strong> {{custom_order.order.address.location.sub_area}}</li>
+                                                                    <li><strong class="inline-block w-xs">Phone:</strong> {{custom_order.order.user.userprofile.contact}}</li>
+                                                                    <li><strong class="inline-block w-xs">Email:</strong> <a href="javascript:;">{{custom_order.order.user.email}}</a></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-5 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    Address
+                                                                    <a href="" onclick="change_editable_address()" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>
+                                                                </p>
+                                                                <!-- col -->
+                                                                <div class="col-md-6">
+                                                                    <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                        <li>{{custom_order.order.address.address}}</li>
+                                                                        <li>{{custom_order.order.address.landmark}}</li>
+                                                                        <li class=""><strong>{{custom_order.order.address.location.sub_area}}</strong></li>
+                                                                    </ul>
+                                                                    <ul style="display:none;" class="list-unstyled text-darkgray lt mb-20" id="edit_address_ul">
+                                                                        <div class="col-sm-10">
+                                                                            <input type="text" class="form-control rounded" id="input05" value="{{ custom_order.order.address.address }}">
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                                <!-- /col -->
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Delivery &amp; Payment</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>Delivery:</strong> Home-Delivery</li>
+                                                                    <li><strong>Payment:</strong> Cash</li>
+                                                                    <li>{{ custom_order.change_req }}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Invoice ID</th>
+                                                                    <th>Created At</th>
+                                                                    <th>Status</th>
+                                                                    <th>Total</th>
+                                                                    <th style="width: 260px">Actions</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>{{custom_order.order.invoice.id}}</td>
+                                                                    <td>{{custom_order.order.invoice.created_at}}</td>
+                                                                    <td><span class="label label-danger">Not sent</span></td>
+                                                                    <td class="ng-binding">{{custom_order.total_amount}}</td>
+                                                                    <td>
+                                                                        <a target='_blank' href="/admin/app/invoice/{{custom_order.order.invoice.id}}/" class="btn btn-xs btn-default"><i class="fa fa-search"></i> View</a>
+                                                                        <a href="javascript:;" class="btn btn-xs btn-primary"><i class="fa fa-envelope"></i> Send</a>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+
+
+
+                                    </div>
+
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane" id="payments">
+
+
+
+                                        <!-- row -->
+                                      <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile time-simple">
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <!-- row -->
+                                                        <div class="row">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-9">
+                                                                <p class="text-default lt">Created: {{custom_order.order.created_at}}</p>
+                                                                <p class="text-uppercase text-strong mt-40 mb-0 custom-font">Status</p>
+                                                                <h3 class="text-uppercase text-success mt-0 mb-20">
+                                                                    {% if custom_order.order.status == 0 %}
+                                                                          Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 1 %}
+                                                                          Cancelled
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 2 %}
+                                                                          Processed
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 3 %}
+                                                                          Recieved
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 4 %}
+                                                                          Dispatched
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 5 %}
+                                                                          Handed Over
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 6 %}
+                                                                          OLP in proc
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 7 %}
+                                                                          Not Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 8 %}
+                                                                          Delivery CNF By User
+                                                                    {% endif %}
+                                                                </h3>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Order Details</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>ID:</strong> <a href="javascript:;">{{custom_order.order.id}}</a></li>
+                                                                    <li>{{custom_order.order.created_at}}</li>
+                                                                    <li>{{custom_order.order.user.first_name}} {{custom_order.order.user.last_name}}</li>
+                                                                    <li>{{custom_order.order.address.location.sub_area}}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                        <!-- row -->
+                                                        <div class="row b-t pt-20">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Customer</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong class="inline-block w-xs">Name:</strong> {{custom_order.order.user.first_name}} {{custom_order.order.user.last_name}}</li>
+                                                                    <li><strong class="inline-block w-xs">Location:</strong> {{custom_order.order.address.location.sub_area}}</li>
+                                                                    <li><strong class="inline-block w-xs">Phone:</strong> {{custom_order.order.user.userprofile.contact}}</li>
+                                                                    <li><strong class="inline-block w-xs">Email:</strong> <a href="javascript:;">{{custom_order.order.user.email}}</a></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-5 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    Address
+                                                                    <a href="" onclick="change_editable_address()" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>
+                                                                </p>
+                                                                <!-- col -->
+                                                                <div class="col-md-6">
+                                                                    <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                        <li>{{custom_order.order.address.address}}</li>
+                                                                        <li>{{custom_order.order.address.landmark}}</li>
+                                                                        <li class=""><strong>{{custom_order.order.address.location.sub_area}}</strong></li>
+                                                                    </ul>
+                                                                    <ul style="display:none;" class="list-unstyled text-darkgray lt mb-20" id="edit_address_ul">
+                                                                        <div class="col-sm-10">
+                                                                            <input type="text" class="form-control rounded" id="input05" value="{{ custom_order.order.address.address }}">
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                                <!-- /col -->
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Delivery &amp; Payment</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>Delivery:</strong> Home-Delivery</li>
+                                                                    <li><strong>Payment:</strong> Cash</li>
+                                                                    <li>{{ custom_order.change_req }}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                        
+                                                <!-- /tile -->
+
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Payment ID</th>
+                                                                    <th>Payment Note</th>
+                                                                    <th>Payment Date</th>
+                                                                    <th>Status</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td><a href="javascript:;">201500156</a></td>
+                                                                    <td>Payment received for invoice 201500156</td>
+                                                                    <td>Jan 27, 2015</td>
+                                                                    <td><span class="label label-success">Received</span></td>
+                                                                    <td class="ng-binding">$264.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><a href="javascript:;">201500156</a></td>
+                                                                    <td>Payment request sent for invoice 201500156</td>
+                                                                    <td>Jan 26, 2015</td>
+                                                                    <td><span class="label label-default">Sent</span></td>
+                                                                    <td class="ng-binding">$264.00</td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+
+                                    </div>
+
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane" id="notes">
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple no-bg">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <a href="javascript:;" class="tile-button bg-white"><i class="fa fa-plus"></i> Add Note</a>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+                                            </div>
+                                            <!-- /col -->
+
+                                        </div>
+                                        <!-- /row -->
+
+
+
+                                    </div>
+
+                                    <!-- tab in tabs -->
+                                    <div role="tabpanel" class="tab-pane" id="historyTab">
+
+
+
+
+
+                                        <!-- row -->
+                                        <div class="row">
+                                            <!-- col -->
+                                            <div class="col-md-12">
+
+
+                                                <!-- tile -->
+                                                <section class="tile time-simple">
+
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body">
+
+
+                                                        <!-- row -->
+                                                        <div class="row">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-9">
+                                                                <p class="text-default lt">Created: {{custom_order.order.created_at}}</p>
+                                                                <p class="text-uppercase text-strong mt-40 mb-0 custom-font">Status</p>
+                                                                <h3 class="text-uppercase text-success mt-0 mb-20">
+                                                                    {% if custom_order.order.status == 0 %}
+                                                                          Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 1 %}
+                                                                          Cancelled
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 2 %}
+                                                                          Processed
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 3 %}
+                                                                          Recieved
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 4 %}
+                                                                          Dispatched
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 5 %}
+                                                                          Handed Over
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 6 %}
+                                                                          OLP in proc
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 7 %}
+                                                                          Not Delivered
+                                                                    {% endif %}
+                                                                    {% if custom_order.order.status == 8 %}
+                                                                          Delivery CNF By User
+                                                                    {% endif %}
+                                                                </h3>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Order Details</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>ID:</strong> <a href="javascript:;">{{custom_order.order.id}}</a></li>
+                                                                    <li>{{custom_order.order.created_at}}</li>
+                                                                    <li>{{custom_order.order.user.first_name}} {{custom_order.order.user.last_name}}</li>
+                                                                    <li>{{custom_order.order.address.location.sub_area}}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                        <!-- row -->
+                                                        <div class="row b-t pt-20">
+
+                                                            <!-- col -->
+                                                            <div class="col-md-4 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Customer</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong class="inline-block w-xs">Name:</strong> {{custom_order.order.user.first_name}} {{custom_order.order.user.last_name}}</li>
+                                                                    <li><strong class="inline-block w-xs">Location:</strong> {{custom_order.order.address.location.sub_area}}</li>
+                                                                    <li><strong class="inline-block w-xs">Phone:</strong> {{custom_order.order.user.userprofile.contact}}</li>
+                                                                    <li><strong class="inline-block w-xs">Email:</strong> <a href="javascript:;">{{custom_order.order.user.email}}</a></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-5 b-r">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">
+                                                                    Address
+                                                                    <a href="" onclick="change_editable_address()" class="btn btn-default btn-rounded-20 btn-xs pull-right"><i class="fa fa-pencil"></i></a>
+                                                                </p>
+                                                                <!-- col -->
+                                                                <div class="col-md-6">
+                                                                    <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                        <li>{{custom_order.order.address.address}}</li>
+                                                                        <li>{{custom_order.order.address.landmark}}</li>
+                                                                        <li class=""><strong>{{custom_order.order.address.location.sub_area}}</strong></li>
+                                                                    </ul>
+                                                                    <ul style="display:none;" class="list-unstyled text-darkgray lt mb-20" id="edit_address_ul">
+                                                                        <div class="col-sm-10">
+                                                                            <input type="text" class="form-control rounded" id="input05" value="{{ custom_order.order.address.address }}">
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                                <!-- /col -->
+                                                            </div>
+                                                            <!-- /col -->
+                                                            <!-- col -->
+                                                            <div class="col-md-3">
+                                                                <p class="text-uppercase text-strong mb-10 custom-font">Delivery &amp; Payment</p>
+                                                                <ul class="list-unstyled text-darkgray lt mb-20">
+                                                                    <li><strong>Delivery:</strong> Home-Delivery</li>
+                                                                    <li><strong>Payment:</strong> Cash</li>
+                                                                    <li>{{ custom_order.change_req }}</li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- /col -->
+
+                                                        </div>
+                                                        <!-- /row -->
+
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                        
+                                                <!-- /tile -->
+
+
+                                                <!-- tile -->
+                                                <section class="tile tile-simple">
+
+                                                    <!-- tile body -->
+                                                    <div class="tile-body p-0">
+
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>Action By</th>
+                                                                    <th>TAG</th>
+                                                                    <th>Comment</th>
+                                                                    <th>Date</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for activity in custom_order.order_activities %}
+                                                                    <tr>
+                                                                        <td>{{ forloop.counter }}</td>
+                                                                        <td>{{ activity.user }}</td>
+                                                                        <td>{{ activity.get_actions_display }}</td>
+                                                                        <td>{% if 'Notification' in activity.comment %}
+                                                                            <a href="#" data-toggle="tooltip" data-html="true" title="{{ activity.comment}}" data-original-title="I've been made <strong>bold!</strong>">Notification Sent!</a>
+                                                                            {% else %}
+                                                                            {{ activity.comment}}
+                                                                        {% endif %} </td>
+                                                                        <td>{{ activity.created_at }}</td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /tile body -->
+
+                                                </section>
+                                                <!-- /tile -->
+
+
+                                            </div>
+                                            <!-- /col -->
+                                        </div>
+                                        <!-- /row -->
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <!-- Modal -->
+                          
+        
+                
+{% endblock %}
+{% block modelcontent %}
+<div class="modal splash fade" id="splash" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title custom-font">Confirm</h3>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel this order?
+                <div class="checkbox">
+                    <label>
+                         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<input checked type="checkbox" id="should_notify_user" name="essentials">Check if user shuold notify
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-border"onclick="cancel_this_order({{custom_order.order.id}})" class="btn btn-primary">Cancel Order</button>
+                <button class="btn btn-default btn-border" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal splash fade" id="splash1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title custom-font">Confirm</h3>
+            </div>
+            <div class="modal-body">
+                Are you sure ?
+                <div class="checkbox">
+                    <label>
+                         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" checked id="should_notify_user_delivered" name="essentials">Send Notification of Delivery Confirmation
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-border"onclick="delivered_order({{custom_order.order.id}})">Delivered</button>
+                <button class="btn btn-default btn-border" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal splash fade" id="splash2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title custom-font">Confirm</h3>
+            </div>
+            <div class="modal-body text-center">
+                Are you sure you want to remove the product?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-border"onclick="remove_product()" class="btn btn-primary">Remove</button>
+                <button class="btn btn-default btn-border" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+    <!-- /#wrapper -->
+{% block jscontent %}
+    <!-- jQuery -->
+    
+
+
+
+
+        <!-- ===============================================
+        ============== Page Specific Scripts ===============
+        ================================================ -->
+        <script>
+            var to_be_deleted_id ;
+            $(window).load(function(){
+
+
+            });
+            function set_id(id){
+                to_be_deleted_id=id;
+            }
+            function cancel_this_order(id){
+                // var result = confirm("Are you sure you want to cancel this order?");
+                // if (result==true) {
+                //     var result1 = confirm("Click OK if User should notify");
+                var result = $('#should_notify_user').is(":checked")
+                // alert(result);
+                    if(result==true){
+                        window.location.href = "/movinCartAdmin/cancel_single_order/"+id+"?notify=0";//0=true
+                    }else{
+                        window.location.href = "/movinCartAdmin/cancel_single_order/"+id+"?notify=1";//1=false
+                    }
+                    //Logic to delete the item
+
+                // }
+            };
+            function delivered_order(id){
+        // var result = confirm("Are you sure?");
+        // if (result==true) {
+            //Logic to delete the item
+            var result = $('#should_notify_user_delivered').is(":checked")
+            if(result==true){
+                window.location.href = "/movinCartAdmin/order_delivered/"+id+"?notify=0";//0=true
+            }else{
+                window.location.href = "/movinCartAdmin/order_delivered/"+id+"?notify=1";//1=false
+            }
+
+
+        // }
+            };
+            function processed_order(id){
+                window.location.href = "/movinCartAdmin/order_processed/"+id
+            };
+            function change_editable_address(){
+
+            }
+        </script>
+        <!--/ Page Specific Scripts -->
+
+        <script>
+        function remove_product(){
+            window.location.href = "/movinCartAdmin/remove_product_frm_order/?order_id=" + {{custom_order.order.id}} + "&sp_id=" + to_be_deleted_id;
+        }
+        </script>
+
+
+
+
+{% endblock %}

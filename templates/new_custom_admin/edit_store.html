@@ -1,0 +1,808 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block body_class_content %}
+class="appWrapper sidebar-xs-forced device-lg scheme-default default-scheme-color header-fixed aside-fixed rightbar-hidden sidebar-xs"
+{% endblock %}
+{% block bodycontent %}
+    <div class="page page-shop-single-product">
+        <div class="pageheader">
+            <h2>Edit Store</h2>
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                    </li>
+                    <li>
+                        <a href="/movinCartAdmin/show_stores">Store</a>
+                    </li>
+                    <li>
+                        <a href="#">Edit Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="pagecontent">
+            <div class="add-nav">
+                <div class="nav-heading">
+                    <h3>Shop - {{ store.name }}</h3>
+                    <span class="controls pull-right">
+                      <a href="/movinCartAdmin/show_stores/" class="btn btn-ef btn-ef-1 btn-ef-1-warning btn-ef-1c mb-10" data-toggle="tooltip" title="Back"><i>Back</i></a>
+                      <a href="#" onclick="validate_n_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Save"><i>Save</i></a>
+                    </span>
+                </div>
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#details" aria-controls="details" role="tab" data-toggle="tab">Shop Details</a></li>
+                        <li role="presentation"><a href="#inventoryTab" aria-controls="inventory" role="tab" data-toggle="tab">Inventory</a></li>
+                        <li role="presentation"><a href="#locationsTab" aria-controls="locations" role="tab" data-toggle="tab">Locations</a></li>
+                        <li role="presentation"><a href="#uploadTab" aria-controls="upload_products" role="tab" data-toggle="tab">Upload Products</a></li>
+                        <li role="presentation"><a href="#historyTab" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="details">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <section class="tile">
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Edit </strong> General Informations</h1>
+                                        </div>
+                                        <div class="tile-body">
+                                            <form action="/movinCartAdmin/edit_store/{{ store.id }}/" method="POST" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label for="id" class="col-sm-2 control-label">Shop ID: </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="id" placeholder="Item ID" value="{{ store.id }}" disabled="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">Shop Name: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input name="s_name" type="text" class="form-control" id="name" placeholder="Shop Name" value="{{ store.name }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">Owner Name: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input name="s_owner" type="text" class="form-control" id="s_owner" placeholder="Owner Name" value="{{ store.owner_name }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">Shop Contact : <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input name="s_contact" type="text" class="form-control" id="s_contact" placeholder="Shop Contact" value="{{ store.contact }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">Shop Address: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input name="s_address" type="text" class="form-control" id="s_address" placeholder="Shop Address" value="{{ store.address }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="services" class="col-sm-2 control-label">Services Served: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <select name="s_services" tabindex="3" id="services" multiple="" class="chosen-select" style="width: 97%;">
+                                                            <option value=""></option>
+                                                        {% if services %}
+                                                            {% for s in services %}
+                                                                    <option {% if s in selected_services %} selected {% endif %} value="{{s.id}}" >{{s.name}}</option>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="locations" class="col-sm-2 control-label">Locations Served: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <select disabled name="s_locations" id="locations" multiple="" class="form-control chosen-select mb-10" style="width: 97%;">
+                                                            <option value=""></option>
+                                                        {% if locations %}
+                                                            {% for l in locations %}
+                                                                        <option {% if l in selected_locations %} selected {% endif %} value="{{l.id}}" >{{l.sub_area}}</option>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">Open Time: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <div class='input-group datepicker w-360 mt-10' data-format="LT">
+                                                            <input name="s_open" id="s_open" value="{{ store.open_time }}" type='text' class="form-control" />
+                                                            <span class="input-group-addon">
+                                                                <span class="fa fa-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="name" class="col-sm-2 control-label">End Time:<span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <div class='input-group datepicker w-360 mt-10' data-format="LT">
+                                                            <input name="s_end" id="s_end" value="{{ store.end_time }}" type='text' class="form-control" />
+                                                            <span class="input-group-addon">
+                                                                <span class="fa fa-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="l_cord" class="col-sm-2 control-label">Location: <span class="text-lightred text-md">*</span></label>
+                                                    <div class="col-sm-10">
+                                                        <input name="l_cord0" type="text" class="form-control" id="l_cord0" disabled placeholder="Location Coordinates" value="{{ store.position }}">
+                                                        <input name="l_cord" class="form-control" id="l_cord" type="hidden" value="{{ store.position }}">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </section>
+                                <section class="tile">
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Edit </strong> Store Location</h1>
+                                        </div>
+                                        <div class="tile-body">
+                                            <div id="basic-map" style="height: 400px;"></div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="inventoryTab">
+                            {% if store_inventory %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <section class="tile collapsed">
+                                            <div class="tile-header dvd dvd-btm">
+                                                <h1 class="custom-font"><strong>In Store Inventory </strong></h1>
+                                                <ul class="controls">
+                                                    <li style="display: none;" id="save_inventory_button"><a href="#"><i class="fa fa-save mr-5"></i> Save Changes</a></li>
+                                                     <li class="dropdown">
+                                                        <a role="button" tabindex="0" class="tile-toggle">
+                                                            <span class="minimize"><i class="fa fa-angle-down"></i></span>
+                                                            <span class="expand"><i class="fa fa-angle-up"></i></span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- /tile header -->
+                                            <!-- tile body -->
+                                            <div class="tile-body" style="display: none;">
+                                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                                                    {% for cat_dict in store_inventory %}
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                                <h4 class="panel-title">
+                                                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseTwo{{ forloop.counter }}">
+                                                                        {{ cat_dict.name }}
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapseTwo{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo{{ forloop.counter }}" aria-expanded="false">
+                                                                <div class="panel-body">
+                                                                    <div class="row">
+                                                                        <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="false">
+                                                                            <div class="tile-body">
+                                                                                {% for subcat_dict in cat_dict.value%}
+                                                                                    <div class="panel panel-default">
+                                                                                        <div class="panel-heading" role="tab" id="headingTwo">
+                                                                                            <h4 class="panel-title">
+                                                                                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse{{ forloop.parentloop.counter }}_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.parentloop.counter }}_{{ forloop.counter }}">
+                                                                                                    {{ subcat_dict.name }}
+                                                                                                </a>
+                                                                                            </h4>
+                                                                                        </div>
+                                                                                        <div id="collapse{{ forloop.parentloop.counter }}_{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ forloop.parentloop.counter }}_{{ forloop.counter }}" aria-expanded="false">
+                                                                                            <div class="panel-body">
+                                                                                                {% for v in subcat_dict.value %}
+                                                                                                    <button onclick="open_model_in_store_invetory('{{ v }}')" class="btn btn-default" data-toggle="modal" data-target="#myModal2">{{ v }}</button>
+                                                                                                {% endfor %}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <section class="tile  collapsed">
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Add Inventory</strong></h1>
+                                            <ul class="controls">
+                                                <li style="display: none;" id="add_inventory_button"><a href="#"><i class="fa fa-save mr-5"></i> Save Changes</a></li>
+                                                <li class="dropdown">
+                                                    <a role="button" tabindex="0" class="tile-toggle">
+                                                        <span class="minimize"><i class="fa fa-angle-down"></i></span>
+                                                        <span class="expand"><i class="fa fa-angle-up"></i></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="tile-body" style="display: none;">
+                                            <div class="panel-group" id="accordion0" role="tablist" aria-multiselectable="false">
+                                                {% for cat_dict in cat_vise_brands %}
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingTwo">
+                                                            <h4 class="panel-title">
+                                                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion0" href="#collapseTwo0{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseTwo0{{ forloop.counter }}">
+                                                                    {{ cat_dict.name }}
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseTwo0{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo0{{ forloop.counter }}" aria-expanded="false">
+                                                            <div class="panel-body">
+                                                                <div class="row">
+                                                                    <div class="panel-group" id="accordion01" role="tablist" aria-multiselectable="false">
+                                                                        <div class="tile-body">
+                                                                            {% for subcat_dict in cat_dict.value%}
+                                                                                <div class="panel panel-default">
+                                                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                                                        <h4 class="panel-title">
+                                                                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion01" href="#collapse0{{ forloop.parentloop.counter }}_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse0{{ forloop.parentloop.counter }}_{{ forloop.counter }}">
+                                                                                                {{ subcat_dict.name }}
+                                                                                            </a>
+                                                                                        </h4>
+                                                                                    </div>
+                                                                                    <div id="collapse0{{ forloop.parentloop.counter }}_{{ forloop.counter }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading0{{ forloop.parentloop.counter }}_{{ forloop.counter }}" aria-expanded="false">
+                                                                                        <div class="panel-body">
+                                                                                            {% for v in subcat_dict.value %}
+                                                                                                <button onclick="open_model_add_invetory('{{ v }}')" class="btn btn-default" data-toggle="modal" data-target="#myModal2">{{ v }}</button>
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            {% if is_fnv %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <section class="tile ">
+                                            <div class="tile-header dvd dvd-btm">
+                                                <h1 class="custom-font"><strong>Copy All Products From Main Fruits And Vegetables Inventory</strong></h1>
+                                            </div>
+                                            <div class="tile-body text-center" id="tile_body_copy">
+                                                <button onclick="start_copy()"id="copy_button" class="btn btn-warning btn-ef btn-ef-5 btn-ef-5b mb-10"><i class="fa fa-copy"></i> <span>Start Copy</span></button>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="locationsTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <section class="tile tile">
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Locations </strong> Active</h1>
+                                            <ul class="controls">
+                                                <li style="display: none;" id="save_changes_li"><a href="#" onclick="save_all_changes()"><i class="fa fa-plus mr-5"></i> Save Changes</a></li>
+                                                <li><a href="" data-toggle="modal" data-target="#add_location_service_mapping"><i class="fa fa-plus mr-5"></i> New Location</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="tile-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Location</th>
+                                                            <th class="text-center">Service</th>
+                                                            <th class="text-center">Time Slot</th>
+                                                            <th class="text-center">Delivery Charges</th>
+                                                            <th class="text-center">Min Delivery Amount</th>
+                                                            <th class="text-center">Rush Hours Delivery Time</th>
+                                                            <th class="text-center">Normal Hours Delivery Time</th>
+                                                            <th class="text-center">Is Active</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="location_served">
+                                                        {% for stl in store.storetiminginlocation_set.all %}
+                                                            <tr>
+                                                                <td>{{ stl.lsm.location }}</td>
+                                                                <td>{{ stl.lsm.service }}</td>
+                                                                <td>
+                                                                    <select required id="ts{{ stl.id }}" class="form-control chosen-select mb-10" style="width: 97%;">
+                                                                        <option value="">Select a Time Slot</option>
+                                                                        {% if time_slots %}
+                                                                            {% for l in time_slots %}
+                                                                                <option {% if l in stl.time_slot.all %}selected{% endif %} value="{{l.id}}" >{{l}}</option>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </select>
+                                                                </td>
+                                                                <td><input id="dc{{ stl.id }}" type="text" class="form-control rounded text-center" value="{{ stl.delivery_charges }}"></td>
+                                                                <td><input id="mda{{ stl.id }}" type="text" class="form-control rounded text-center" value="{{ stl.delivery_min_amount }}"></td>
+                                                                <td><input id="rmdt{{ stl.id }}" type="text" class="form-control rounded text-center" value="{{ stl.rush_hours_delivery_time_min }}"></td>
+                                                                <td><input id="nmdt{{ stl.id }}" type="text" class="form-control rounded text-center" value="{{ stl.normal_hours_delivery_time_min }}"></td>
+                                                                <td>
+                                                                    <div class="onoffswitch labeled blue inline-block">
+                                                                        <input onclick="stl_activated({{ stl.id }})"type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switch10{{ stl.id }}" {% if stl.is_active %}checked{% endif %}>
+                                                                        <label class="onoffswitch-label" for="switch10{{ stl.id }}">
+                                                                            <span class="onoffswitch-inner"></span>
+                                                                            <span class="onoffswitch-switch"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+						<div role="tabpanel" class="tab-pane" id="uploadTab">
+							<div class="row">
+								<div class="col-md-12">
+
+								<!-- tile -->
+									<section class="tile tile-simple">
+
+									<!-- tile body -->
+										<div class="tile-body">
+
+											<blockquote>
+												<p>
+													Upload Excel Sheet
+												</p>
+											</blockquote>
+											<div id="fileupload_div">
+												<div class="tile-body" id="image_div" ></div>
+
+												<!-- The file upload form used as target for the file upload widget -->
+													<form id="fileupload" name="fileupload" action="/movinCartAdmin/upload_excel_file_in_store/" method="POST" enctype="multipart/form-data">
+														{% csrf_token %}
+														<!-- Redirect browsers with JavaScript disabled to the origin page -->
+														<noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+														<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+														<div id="upload_button" class="row fileupload-buttonbar">
+															<div class="col-lg-7">
+																<!-- The fileinput-button span is used to style the file input field as button -->
+																<span class="btn btn-success fileinput-button">
+																	<i class="glyphicon glyphicon-plus"></i>
+																<span>Add files</span>
+																	<input type="file" id="file" name="files[]" multiple>
+																</span>
+																<button type="button" onclick="submit_form()" id="upload_file_button" class="btn btn-primary start">
+																	<i class="glyphicon glyphicon-upload"></i>
+																	<span>Upload</span>
+																</button>
+															</div>
+														</div>
+														<div style="display:none" id="hidden1">
+															<p>Successfully loaded Excel File</p>
+															<button type="button" onclick="start_product_upload()" class="btn btn-danger delete"><i class="glyphicon glyphicon-trash"></i><span>Add Products to Store</span></button>
+														</div>
+														<br>
+														<br>
+														<br>
+													</form>
+													<div style="display:none" class="tile-body" id="stack_trace_product_upload">
+														<div class ="table-responsive">
+															<table class="table table table-bordered table-hover  text-center" id="products_upload_list">
+																<thead>
+																	<tr>
+																		<th class="text-center"style="width:40px;">Row Number</th>
+																		<th class="text-center"style="width:140px;">Product Name</th>
+																		<th class="text-center"style="width:80px;">Message</th>
+																	</tr>
+																</thead>
+																<tbody id="stack_table_body"></tbody>
+															</table>
+														</div>
+													</div>
+													<!-- /tile body -->
+												</div>
+												<br>
+												<br>
+												<br>
+												<div class="panel panel-primary">
+													<div class="panel-heading">
+														<h3 class="panel-title">Important Notes For Uploading Excel</h3>
+													</div>
+													<div class="panel-body">
+														<ul>
+															<li>The maximum file size for uploads in this demo is <strong>5 MB</strong> (default file size is unlimited).</li>
+															<li>Only image files (<strong>JPG, GIF, PNG</strong>) are allowed in this demo (by default there is no file type restriction).</li>
+															<li>Uploaded files will be deleted automatically after <strong>5 minutes</strong> (demo setting).</li>
+														</ul>
+													</div>
+												</div>
+
+												<!-- The blueimp Gallery widget -->
+												<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+													<div class="slides"></div>
+														<h3 class="title"></h3>
+														<a class="prev">‹</a>
+														<a class="next">›</a>
+														<a class="close">×</a>
+														<a class="play-pause"></a>
+														<ol class="indicator"></ol>
+													</div>
+												</div>
+													<!-- /tile body -->
+
+									</section>
+													<!-- /tile -->
+								</div>
+							</div>
+						</div>
+                        <div role="tabpanel" class="tab-pane" id="historyTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <section class="tile tile">
+                                        <div class="tile-header dvd dvd-btm">
+                                            <h1 class="custom-font"><strong>Product </strong> History</h1>
+                                        </div>
+                                        <div class="tile-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Desription</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><a href="javascript:;">1</a></td>
+                                                        <td>Store Created</td>
+                                                        <td>{{ store.created_at }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="javascript:;">2</a></td>
+                                                        <td>Store Modified</td>
+                                                        <td>{{ store.modified_at }}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block modelcontent %}
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title custom-font" id="model_title">I'm a modal!</h3>
+                </div>
+                <div class="modal-body" id="product_in_model">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"><i class="fa fa-arrow-right"></i> Submit</button>
+                    <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_location_service_mapping" tabindex="-1" role="dialog" aria-labelledby="add_location_service_mappingLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action='/movinCartAdmin/store/add/locations/' method="POST" class="form-inline" role="form">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ store.id }}" name="store_id">
+                    <div class="modal-header">
+                        <h3 class="modal-title custom-font" id="model_title">New Location For {{ store.name }}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <select required name="new_location" id="new_location" class="form-control chosen-select mb-10" style="width: 97%;">
+                                    <option value="">Select a Location</option>
+                                    {% if locations %}
+                                        {% for l in locations %}
+                                            <option value="{{l.id}}" >{{l.sub_area}}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select required name="new_service" id="new_service" class="form-control chosen-select mb-10" style="width: 97%;">
+                                    {% if selected_services|length == 1 %}
+                                        <option selected value="{{ selected_services.0.id }}">{{ selected_services.0.name }}</option>
+                                    {% else %}
+                                        <option value="">Select a Service</option>
+                                        {% if selected_services %}
+                                            {% for l in selected_services %}
+                                                <option value="{{l.id}}" >{{l.name}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select multiple required name="new_time_slot" multiple id="new_time_slot" class="form-control chosen-select mb-10" style="width: 97%;">
+                                    <option value="">Select a Time Slot</option>
+                                    {% if time_slots %}
+                                        {% for l in time_slots %}
+                                            <option value="{{l.id}}" >{{l}}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        </br>
+                        <div class="row">
+                            <div class="col-md-3 form-group">
+                                <input type="text" required name="new_dc" placeholder="Delivery Charges" class="form-control rounded text-center">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" required name="new_mda" placeholder="Min Delivery Amount" class="form-control rounded text-center">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" required name="new_rmdt" placeholder="Min Delivery Time" class="form-control rounded text-center">
+                                <p class="help-block mb-0">Rush Hours Delivery Time</p>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" required name="new_nmdt" placeholder="Min Delivery Time" class="form-control rounded text-center">
+                                <p class="help-block mb-0">Normal Hours Delivery Time</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"><i class="fa fa-arrow-right"></i> Add</button>
+                        <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="hidden" style="display: none;"></div>
+{% endblock %}
+
+{% block jscontent %}
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNent3rKW1eCE6AEQ185rZ4Jac8dGcNBg">
+    </script>
+
+
+     <script>
+
+        function start_copy(){
+            document.getElementById('copy_button').style.display= "none";
+            document.getElementById("tile_body_copy").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;"/>';
+            var copy_url = '/movinCartAdmin/store/copy_product_from_main/?store_id='+{{ store.id }};
+            $('#hidden').load(copy_url, function(){
+                document.getElementById("tile_body_copy").innerHTML="";
+            });
+        }
+        function validate_n_submit() {
+            var x = document.forms["myForm"]["s_name"].value;
+            if (x == null || x == "") {
+                alert("Name must be filled out");
+            } else {
+                document.getElementById("myForm").submit();
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+      var poly_list = "";
+      var mapOptions = {
+          center: { lat: -34.397, lng: 150.644},
+          zoom: 8
+        };
+      var map = new google.maps.Map(document.getElementById('basic-map'), mapOptions);
+      map.setCenter(new google.maps.LatLng({{ store.position }}), 5);
+      map.setZoom(13);
+
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng({{ store.position }}),
+          map: map,
+          draggable : true,
+          title: 'Store Location'
+      });
+      var changed_id_list=[];
+      function initialize() {
+        document.getElementById('l_cord').value = marker.getPosition();
+        google.maps.event.addListener(map, 'click', function(event) {
+//            addMarker(event.latLng,"First Marker");
+//              poly_list =  event.latLng.lat()+" , "+event.latLng.lng();
+//              document.getElementById('l_cord').value=poly_list;
+        });
+        google.maps.event.addListener(marker, 'dragend', function(event){
+            document.getElementById('l_cord0').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+            document.getElementById('l_cord').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+        });
+        google.maps.event.addListener(marker, 'dragstart', function(event){
+            document.getElementById('l_cord0').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+            document.getElementById('l_cord').value = event.latLng.lat() + ' , ' + event.latLng.lng();
+        });
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+    function open_model_in_store_invetory(v){
+        var element = document.getElementById('model_title');
+        // removing everything inside the node
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+        // appending new text node
+        element.appendChild(document.createTextNode(v));
+        document.getElementById("model_title").innerHTML=v;
+        document.getElementById("product_in_model").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+        document.getElementById("save_inventory_button").style.display = "block";
+    }
+    function open_model_add_invetory(v){
+        var element = document.getElementById('model_title');
+        // removing everything inside the node
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+        // appending new text node
+        element.appendChild(document.createTextNode(v));
+        document.getElementById("model_title").innerHTML=v;
+        document.getElementById("product_in_model").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+        document.getElementById("add_inventory_button").style.display = "block";
+    }
+
+
+    $(window).load(function() {
+
+        $('#location_served .form-control').each(function () {
+            var elem = $(this);
+            elem.data('oldVal', elem.val());
+            elem.bind("propertychange change click keyup input paste", function (event) {
+                // If value has changed...
+                id = elem.attr('id').replace("dc", "").replace("mda", "").replace("rmdt", "").replace("nmdt", "").replace("switch10", "").replace("ts","");
+                if (id != "keyword" && id != "price_p_copy") {
+                    if (changed_id_list.indexOf(id) == -1) {
+                        changed_id_list.push(id);
+                    }
+                    document.getElementById('save_changes_li').style.display= "block";
+                }
+            });
+        });
+
+			$("#fileupload").submit(function(e)
+			{
+
+				$(document).ready(function(){
+					document.getElementById("image_div").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+					$(document).ajaxStart(function(){
+						$("#image_div").css("display", "block");
+					});
+					$(document).ajaxComplete(function(){
+						$("#image_div").css("display", "none");
+					});
+					var formObj = $(this);
+					var formURL = formObj.attr("action");
+					var formData = new FormData(this);
+					$.ajax({
+						url: formURL,
+						type: 'POST',
+						data:  formData,
+						mimeType:"multipart/form-data",
+						contentType: false,
+						cache: false,
+						processData:false,
+						success: function(data, textStatus, jqXHR) {
+							document.getElementById('hidden1').style.display = 'block';
+							document.getElementById('upload_button').style.display = 'none';
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							document.getElementById('hidden1').style.display = 'none';
+							document.getElementById('upload_button').style.display = 'block';
+						}
+					});
+					e.preventDefault(); //Prevent Default action.
+					e.unbind();
+				});
+			});
+    	});
+    function stl_activated(id){
+        if (changed_id_list.indexOf(id+"") == -1) {
+            changed_id_list.push(id+"");
+        }
+        document.getElementById('save_changes_li').style.display= "block";
+    }
+    function save_all_changes(){
+        for(i = 0; i <changed_id_list.length; i++){
+            var stl_id = changed_id_list[i]+"";
+            var ts = encodeURIComponent(document.getElementById("ts"+stl_id).value);
+            var dc = encodeURIComponent(document.getElementById("dc"+stl_id).value);
+            var mda = encodeURIComponent(document.getElementById("mda"+stl_id).value);
+            var rmdt = encodeURIComponent(document.getElementById("rmdt"+stl_id).value);
+            var nmdt = encodeURIComponent(document.getElementById("nmdt"+stl_id).value);
+            var is_active = encodeURIComponent(document.getElementById("switch10"+stl_id).checked);
+            var save_stl_url = '/movinCartAdmin/store/edit_stl_info_frm_table/?stl_id='+stl_id+'&dc='+dc+'&mda='+mda+'&rmdt='+rmdt+'&nmdt='+nmdt+'&ts='+ts+'&is_active='+is_active;
+            $('#hidden').load(save_stl_url, function(){});
+            delete changed_id_list[i];
+            if(changed_id_list.length>0){
+                document.getElementById("save_changes_li").style.display = "block";
+            }else{
+                document.getElementById("save_changes_li").style.display = "none";
+            }
+        }
+        changed_id_list=[];
+        if(changed_id_list.length>0){
+            document.getElementById("save_changes_li").style.display = "block";
+        }else{
+            document.getElementById("save_changes_li").style.display = "none";
+        }
+    }
+    </script>
+
+    <script>
+
+        function submit_form(){
+            $("#fileupload").submit(); //Submit the form
+        };
+
+        function start_product_upload(){
+            document.getElementById('stack_trace_product_upload').style.display = 'block';
+            $('#products_upload_list').DataTable({
+            "ajax": '/movinCartAdmin/upload_products_from_excel_in_store/?store_id=' + {{ store.id }},
+            "columns": [
+                {"data": "row_num"},
+                {"data": "name"},
+                {"data": "log"},
+            ],
+            "dom": '<"row"<"col-md-8 col-sm-12"<"inline-controls center"l>><"col-md-4 col-sm-12"<"pull-right"f>>>t<"row"<"col-md-4 col-sm-12"<"inline-controls center"l>><"col-md-4 col-sm-12"<"inline-controls text-center center"i>><"col-md-4 col-sm-12"p>>',
+            "language": {
+                "sLengthMenu": 'View _MENU_ records',
+                "sInfo": 'Found _TOTAL_ records',
+                "oPaginate": {
+                    "sPage": "Page ",
+                    "sPageOf": "of",
+                    "sNext": '<i class="fa fa-angle-right"></i>',
+                    "sPrevious": '<i class="fa fa-angle-left"></i>'
+                }
+            },
+            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+            "pagingType": "input",
+            "order": [[2, "asc"]],
+                "aoColumnDefs": [
+                {'bSortable': false, 'aTargets': ["no-sort"]}
+            ],
+
+        });
+        }
+
+    </script>
+
+{% endblock %}
+
+
+

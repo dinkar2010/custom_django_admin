@@ -1,0 +1,318 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+  {% block bodycontent %}
+
+      <div class="page page-shop-single-product">
+            <div class="pageheader">
+                    <h2 class="page-header">Add Product</h2>
+                    <div class="page-bar">
+
+                        <ul class="page-breadcrumb">
+                            <li>
+                                <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                            </li>
+                            <li>
+                                <a href="#">Add Store Product</a>
+                            </li>
+                        </ul>
+
+                    </div>
+            </div>
+                <!-- /.col-lg-12 -->
+            <!-- /.row -->
+
+            <form action="/admin/app/storeproductmapping/add/" method="POST" role="form">
+            {% csrf_token %}
+
+                    <!-- row -->
+                    <div class="row">
+                        <!-- col -->
+                        <div class="col-md-12">
+                            <!-- tile -->
+                            <section class="tile">
+
+                                <!-- tile header -->
+                                <div class="tile-header dvd dvd-btm">
+                                    <h1 class="custom-font"><strong>Product Details </strong></h1>
+                                </div>
+                                <!-- /tile header -->
+
+                                <!-- tile body -->
+                                <div class="tile-body">
+
+                                    <div class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">Name</label>
+                                            <div class="col-sm-10">
+                                                <input required name="p_name" type="name"  class="form-control" id="name" placeholder="Enter Product Name">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="brand_name" class="col-sm-2 control-label">Brand Name</label>
+                                            <div class="col-sm-10">
+                                                <input required name="p_brand" type="name" list="prev_brands" class="form-control" id="brand_name" placeholder="Enter Brand Name">
+                                                 <datalist id="prev_brands">
+                                                     {% for b in brands %}
+                                                        <option value="{{ b }}">
+                                                     {% endfor %}
+
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="description" class="col-sm-2 control-label">Description</label>
+                                            <div class="col-sm-10">
+                                                <input name="p_description" type="description" class="form-control" id="description" placeholder="Enter Description">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="category" class="col-sm-2 control-label">Category Name</label>
+                                            <div class="col-sm-10">
+                                                <select required name="p_category" id="p_category" single="" tabindex="3" class="chosen-select" style="width: 300px;">
+                                                        <option value=""></option>
+                                                {% if categories %}
+                                                    {% for s in categories %}
+                                                        <option value="{{s.id}}" >{{s.name}}</option>
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="tags" class="col-sm-2 control-label">Tags</label>
+                                            <div class="col-sm-10">
+                                                <input name="p_tags" type="tags" class="form-control" id="tags" placeholder="Please enter Tags separated by Space.Eg - bhindi onions">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="rating" class="col-sm-2 control-label">Rating</label>
+                                            <div class="col-sm-10">
+                                                <input name="p_rating" type="rating" class="form-control" id="rating" placeholder="rating">
+                                            </div>
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="barcode" class="col-sm-2 control-label">Barcode</label>
+                                            <div class="col-sm-10">
+                                                <input name="p_barcode" type="barcode" class="form-control" id="barcode" placeholder="barcode">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="related_products" class="col-sm-2 control-label">Related Products</label>
+                                            <div class="col-sm-10">
+                                                <input name="p_related" type="related_products" class="form-control" id="related_products" placeholder="related_products">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /tile body -->
+
+                            </section>
+                            <!-- /tile -->
+
+                        </div>
+                        <!-- /col -->
+
+
+
+                    </div>
+                    <!-- /row -->
+
+
+                    <!-- row -->
+                    <div class="row">
+                        <!-- col -->
+                        <div class="col-md-12">
+
+                            <!-- tile -->
+                            <section class="tile">
+
+                                <!-- tile header -->
+                                <div class="tile-header dvd dvd-btm">
+                                    <h1 class="custom-font"><strong>Enter Size </strong></h1>
+                                </div>
+                                <!-- /tile header -->
+
+                                <div class="tile-body">
+
+                                    <div class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <label for="magnitude" class="col-sm-2 control-label">Magnitude</label>
+                                            <div class="col-sm-10">
+                                                <input required name="p_magnitude" type="magnitude" class="form-control" id="magnitude" placeholder="Enter Magnitude.Eg : 500">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="unit" class="col-sm-2 control-label">Unit</label>
+                                            <div class="col-sm-10">
+                                                <input required name="p_unit" type="unit" class="form-control" id="unit" placeholder="Enter Unit.Eg : Kg">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="image" class="col-sm-2 control-label">Image</label>
+                                            <div class="col-sm-10">
+                                                <input required name="p_image" type="name" class="form-control" id="image" placeholder="Enter Image Link">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </section>
+                            <!-- /tile -->
+                            </div>
+                        </div>
+
+
+
+                    <!-- row -->
+                    <div class="row">
+                        <!-- col -->
+                        <div class="col-md-12">
+                            <!-- tile -->
+                            <section class="tile">
+
+                                <!-- tile header -->
+                                <div class="tile-header dvd dvd-btm">
+                                    <h1 class="custom-font"><strong>Enter Store </strong></h1>
+                                </div>
+                                <!-- /tile header -->
+
+                                <div id="store_details" class="tile-body">
+
+                                    <div class="form-horizontal" role="form">
+                                        <div class="form-group">
+
+
+                                            <div class="form-group">
+                                                <label for="name" class="col-sm-2 control-label">Enter Price</label>
+                                                <div class="col-sm-10">
+                                                    <input required name="p_price" type="name" class="form-control" id="p_price" placeholder="Enter Price in Rs.">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name" class="col-sm-2 control-label">Discount</label>
+                                                <div class="col-sm-10">
+                                                    <input required name="p_discount" type="name" class="form-control" id="p_discount" placeholder="Enter Discount in Rs.">
+                                                </div>
+                                            </div>
+                                             <div class="form-group">
+                                                <label for="name" class="col-sm-2 control-label">Stock</label>
+                                                <div class="col-sm-10">
+                                                    <select required name="p_stock" single="" tabindex="3" class="chosen-select" style="width: 300px;">
+                                                    <option value="true">True</option>
+                                                    <option value="false">False</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                            <label for="category" id="main_store" class="col-sm-2 control-label">Select Main Store</label>
+                                                <div class="col-sm-10">
+                                                    <select required id="p_main_store" name="p_main_store" single="" tabindex="3" class="chosen-select" style="width: 300px;">
+
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div id="store_field">
+                                                <div  class="form-group">
+                                                    <label for="category" class="col-sm-2 control-label">Select Local Store</label>
+                                                    <div class="col-sm-10">
+                                                        <select required id="p_local_store" name="p_local_store" single="" tabindex="3" class="chosen-select" style="width: 300px;">
+
+                                                        </select>
+                                                    <!--<button id="add_store_button" onclick="duplicate()" type="button" class="btn btn-lightred">Add Another Store</button>-->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                                <div class="form-group">
+                                                    <div class="col-sm-4 col-sm-offset-2">
+
+                                                        <button type="submit" class="btn btn-default">Add Product</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    </section>
+                                <!-- /tile -->
+                                </div>
+                            </div>
+
+                        </form>
+                         <!-- /#page-wrapper -->
+
+                    </div>
+            </div>
+
+  {% endblock %}
+
+
+{% block jscontent %}
+    <script src="{%  static "assets/js/vendor/colorpicker/js/bootstrap-colorpicker.min.js"%}"></script>
+    <script src="{% static "assets/js/vendor/daterangepicker/moment.min.js"%}"></script>
+
+    <script type="text/javascript">
+        jQuery(function($) {
+{#            $('#p_category').chosen({no_results_text: "Oops, No Service found!"});#}
+            $("#p_category").bind('change', function () {
+
+                var category_id = $(this).val();
+                var service_id=0
+                {%  for key,value in service_category.items %}
+                    {% for c_id in value %}
+                        if (category_id == '{{ c_id }}'){
+                            service_id ={{ key }};
+                        }
+                    {% endfor %}
+                {% endfor %}
+
+                var final_main_stores ='<option value=""></option>';
+                {% for s in main_stores %}
+                    {% for serv in s.services.all %}
+                        if(service_id == '{{ serv.id}}'){
+                            final_main_stores= final_main_stores + '<option value="{{s.id}}" >{{s.name}}</option>';
+                        }
+                    {% endfor %}
+                {% endfor %}
+                jQuery('#p_main_store').html(final_main_stores);
+                $('#p_main_store').trigger("chosen:updated");
+
+                var final_local_stores='<option value=""></option>';
+                {% for s in stores %}
+                    {% for serv in s.services.all %}
+                        if(service_id == '{{ serv.id}}'){
+                            final_local_stores=final_local_stores+'<option value="{{s.id}}" >{{s.name}}</option>';
+                        }
+                        {% endfor %}
+                {% endfor %}
+                jQuery('#p_local_store').html(final_local_stores);
+                $('#p_local_store').trigger("chosen:updated");
+
+            });
+        });
+    </script>
+
+    <script>
+        var original = document.getElementById('store_field');
+        function duplicate() {
+            original.insertAdjacentHTML('beforeend', '<div class="form-group">' +
+                    '<label for="category" class="col-sm-2 control-label">Select Local Store</label>' +
+                    '<div class="col-sm-10">' +
+                    '<select id = "local_store" required name="p_local_store" single="" tabindex="3" class="chosen-select" style="width: 300px;">' +
+                    '<option value=""></option>{% if stores %}{% for s in stores %}<option value="{{s.id}}" >{{s.name}}</option>{% endfor %}{% endif %}</select></div></div>');
+{#            $('#local_store').trigger("chosen:updated");#}
+
+        }
+    $(window).load(function(){
+        $(".chosen-select").chosen()
+    });
+    </script>
+{% endblock %}

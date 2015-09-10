@@ -1,0 +1,60 @@
+{% load static %}
+<div id="pie-chart" style="height: 250px"></div>
+<script src="{% static "jquery/external/jquery/jquery.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.min.js"%}"></script>
+
+<script src="{% static "assets/js/vendor/flot/jquery.flot.resize.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.orderBars.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.stack.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot/jquery.flot.pie.min.js"%}"></script>
+
+
+<script src="{% static "assets/js/vendor/flot-tooltip/jquery.flot.tooltip.min.js"%}"></script>
+<script src="{% static "assets/js/vendor/flot-spline/jquery.flot.spline.min.js"%}"></script>
+
+
+<script type="text/javascript" >
+
+        // Initialize Combined Chart
+
+        var data6 = [
+            { label: 'New User', data: {{ repeat_user_data.new_user }} },
+            { label: 'Repeated User', data: {{ repeat_user_data.repeated_user }} },
+        ];
+
+        var options6 = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    stroke: {
+                        width: 0
+                    },
+                    label: {
+                        show: true,
+                        threshold: 0.05
+                    }
+                }
+            },
+            colors: ['#428bca','#5cb85c'],
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 0,
+                color: '#ccc'
+            },
+            tooltip: true,
+            tooltipOpts: { content: '%s: %p.0%' }
+        };
+
+        var plot6 = $.plot($("#pie-chart"), data6, options6);
+
+        $(window).resize(function() {
+            // redraw the graph in the correctly sized div
+            plot6.resize();
+            plot6.setupGrid();
+            plot6.draw();
+        });
+
+
+</script>

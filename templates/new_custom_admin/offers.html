@@ -1,0 +1,120 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+    {% block bodycontent %}
+
+     <div class="page page-shop-products">
+    <div class="pageheader">
+        <h2>Offers </h2>
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                </li>
+                <li>
+                    <a href="#">Offers</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- page content -->
+    <div class="pagecontent">
+        <!-- row -->
+
+        <div class="row">
+            <!-- col -->
+            <div class="col-md-12">
+                <section class="tile">
+
+                    <!-- tile header -->
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font"><strong>Offer</strong> List</h1>
+                        <ul class="controls">
+
+                            {% if perms.app.add_offer%}
+                                <li class="dropdown">
+                                    <li><a href="#"><i class="fa fa-plus mr-5"></i> New Offer</a></li>
+                                </li>
+                            {% endif %}
+                            <li class="dropdown">
+                                <a role="button" tabindex="0" class="tile-toggle">
+                                    <span class="minimize"><i class="fa fa-angle-down"></i></span>
+                                    <span class="expand"><i class="fa fa-angle-up"></i></span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- /tile header -->
+                    <!-- tile body -->
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <table class="table table table-bordered table-hover  text-center" id="services-list">
+                                <thead>
+                                <tr>
+                                    <th style="width:40px;">ID</th>
+                                    <th style="width:40px;">Image</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center"style="width:80px;">Is Active</th>
+                                    <th class="text-center"style="width:80px;">Valid Till</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if offers %}
+                                {% for o in offers %}
+                                    <tr >
+                                        <td>{{o.id}}</td>
+                                        <td style="width:5%;"><a target="_blank" href="{{o.image}}" id="o_image{{ o.id }}"><img height="100" width="100" src="{{o.image}}"></a></td>
+                                        <td><a href="/movinCartAdmin/edit_offer/{{ o.id }}/">{{o.name}}</a></td>
+                                        <td>{% if o.is_active %} <span class="label bg-greensea">On</span>{% else %}<span class="label bg-lightred">Off</span> {% endif %}
+                                        <td>{{ o.valid_till }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /tile body -->
+                </section>
+                <!-- /tile -->
+            </div>
+            <!-- /col -->
+        </div>
+        <!-- /row -->
+
+    </div>
+    <!-- /page content -->
+</div>
+<div style="display:none" id="hidden"></div>
+{% endblock %}
+
+
+{% block jscontent %}
+
+    <script>
+        $(window).load(function() {
+
+            //initialize datatable
+            $('#services-list').DataTable({
+                "dom": '<"row"<"col-md-8 col-sm-12"<"inline-controls"l>><"col-md-4 col-sm-12"<"pull-right"f>>>t<"row"<"col-md-4 col-sm-12"<"inline-controls"l>><"col-md-4 col-sm-12"<"inline-controls text-center"i>><"col-md-4 col-sm-12"p>>',
+                "language": {
+                    "sLengthMenu": 'View _MENU_ records',
+                    "sInfo": 'Found _TOTAL_ records',
+                    "oPaginate": {
+                        "sPage": "Page ",
+                        "sPageOf": "of",
+                        "sNext": '<i class="fa fa-angle-right"></i>',
+                        "sPrevious": '<i class="fa fa-angle-left"></i>'
+                    }
+                },
+                "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                "pagingType": "input",
+                "order": [[2, "asc"]],
+                "aoColumnDefs": [
+                    {'bSortable': false, 'aTargets': ["no-sort"]}
+                ],
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+<div class="page page_shop_products">
+    <div class="pageheader">
+        <h2>Suggestion </h2>
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                    </li>
+                    <li>
+                        <a href="#">Suggestions</a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+    <!-- page header-->
+<div class="pagecontent">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font">
+                            <strong>Suggestions</strong> List</h1>
+                            <ul class="controls">
+                            {% if perms.app.can_download_orders_dump %}
+
+                            {% endif %}
+
+                        </ul>
+                </div>
+                 <!-- /tile header -->
+                <!-- tile body -->
+                <div class="tile-body">
+                    <thead class="table-responsive">
+                        <table class="table table table-bordered table-hover  text-center" id="products-list">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Location</th>
+                                    <th class="text-center">Suggestion</th>
+                                    <th class="text-center">Comments</th>
+                                    <th class="text-center">Date</th>
+                                </tr>
+                            </thead>
+                            <!--table head-->
+                            <!--table body-->
+                             <tbody>
+                                {% if suggestion %}
+                                    {% for o in suggestion %}
+                                        <tr >
+                                            <td>{{o.email}}</td>
+                                            <td>{{o.location}}</td>
+                                            <td>{{o.suggestion}}</td>
+                                            <td>{{o.comments}}</td>
+                                            <td>{{o.created_at}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                             </tbody>
+                        </table><!--table-->
+                    </div><!--table head-->
+                </div><!--tile body-->
+            </div><!--tile-->
+         </div><!--colmn md -12-->
+        </div><!--row-->
+    </div><!--page content-->
+</div>
+<!--stylesheet-->
+<div style="display:none" id="hidden"></div>
+{% endblock %}
+{% block jscontent %}
+<script>
+$(window).load(function() {
+
+    //initialize datatable
+    $('#products-list').DataTable({
+        "dom": '<"row"<"col-md-8 col-sm-12"<"inline-controls"l>><"col-md-4 col-sm-12"<"pull-right"f>>>t<"row"<"col-md-4 col-sm-12"<"inline-controls"l>><"col-md-4 col-sm-12"<"inline-controls text-center"i>><"col-md-4 col-sm-12"p>>',
+        "language": {
+            "sLengthMenu": 'View _MENU_ records',
+            "sInfo": 'Found _TOTAL_ records',
+            "oPaginate": {
+                "sPage": "Page ",
+                "sPageOf": "of",
+                "sNext": '<i class="fa fa-angle-right"></i>',
+                "sPrevious": '<i class="fa fa-angle-left"></i>'
+            }
+        },
+        "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+        "pagingType": "input",
+        "order": [[4, "asc"]],
+        "aoColumnDefs": [
+            {'bSortable': false, 'aTargets': ["no-sort"]}
+        ],
+    });
+});
+
+    </script>
+{% endblock %}

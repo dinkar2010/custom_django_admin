@@ -1,0 +1,220 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+{% block bodycontent %}
+<link rel="stylesheet" href="{% static "jquery/json_viewer/css/jjsonviewer.css"%}">
+<div class="page coupon-single-coupon-page">
+	<div class="pageheader">
+		<h2 class="page-header">Test API</h2>
+		<div class="page-bar">
+			<ul class="page-breadcrumb">
+				<li>
+					<a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+				</li>
+				<li>
+					<a href="#">Available Services API Detail</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="add-nav">
+		<div class="nav-heading">
+			<h3>Available Services</h3>
+			<span class="controls pull-right">
+				<a href="#" onclick="test_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="test_all_location"><i>Test All Location</i></a>
+				<div id="wait1" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
+					<img src="http://preloaders.net/preloaders/344/Train%20running.gif" width="64" height="64" /><br>Loading..
+				</div>
+			</span>
+		</div>
+		<div role="tabpanel">
+			<!-- Nav tabs -->
+			<div class="tab-content">
+				<!-- tab in tabs -->
+				<div role="tabpanel" class="tab-pane active" id="details">
+					<!-- row -->
+					<div class="row">
+						<!-- col -->
+						< class="col-md-12">
+							<!-- tile -->
+							<form action="" method="GET" id="myForm" class="form-horizontal ng-pristine ng-valid" role="form">
+								{% csrf_token %}
+								<section class="tile">
+									<!-- tile header -->
+									<div class="tile-header dvd dvd-btm">
+										<h1 class="custom-font"><strong>Available Services API Details </strong></h1>
+									</div>
+									<!-- /tile header -->
+									<!-- tile body -->
+									<div class="form-group">
+										<label for="latitude" class="col-sm-2 control-label">Latitude: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-9">
+											<input required name="latitude" type="value"  class="form-control" id="lat" placeholder="Enter Latitude" style="width: 100%;">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="longitude" class="col-sm-2 control-label">Longitude: <span class="text-lightred text-md">*</span></label>
+										<div class="col-sm-9">
+											<input required name="longitude" type="value"  class="form-control" id="long" placeholder="Enter Longitude" style="width: 100%;">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="version" class="col-sm-2 control-label">Version Id</label>
+										<div class="col-sm-9">
+											<input required name="version" type="value"  value="34" class="form-control" id="version_id" placeholder="Version ID" disabled style="width: 100%; ">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="device" class="col-sm-2 control-label">Device ID</label>
+										<div class="col-sm-9">
+											<input required name="device" type="value"  value="00000000-2593-5ca6-ffff-fffff2d28659" class="form-control" id="phone_id" placeholder="Phone ID" disabled style="width: 100%; ">
+										</div>
+									</div>
+									<ul class="pager">
+										<li>
+											<a href="#" onclick="validate_n_submit()" class="btn btn-ef btn-ef-1 btn-ef-1-success btn-ef-1b mb-10" data-toggle="tooltip" title="Check Service"><i>Check Service</i></a>
+									</ul>
+								</section>
+							</form>
+							<div class="tile-body" id="image_div" ></div>
+							<div id = "placeholder"></div>
+							<section class="table_detail">
+								<div class="pagecontent" id="page_id">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="tile">
+												<div class="tile-header dvd dvd-btm">
+													<h1 class="custom-font">
+													<strong>List of All Services </strong></h1>
+												</div><!-- /tile header -->
+												<!-- tile body -->
+												<div class="tile-body">
+													<thead class="table-responsive">
+														<table class="table table-bordered table-hover  text-center" id="service_list">
+															<thead>
+																<tr>
+																	<th class="text-center">Location ID</th>
+																	<th class="text-center">Location Name</th>
+																	<th class="text-center">Latitude</th>
+																	<th class="text-center">Longitude</th>
+																	<th class="test-center">Services</th>
+																</tr>
+															</thead><!--table head-->
+															<tbody><!--table body-->
+																{% if location %}
+																	{% for i in location %}
+																		<tr>
+																			<td>{{i.location_id}}</td>
+																			<td>{{i.name}}</td>
+																			<td>{{i.lat}}</td>
+																			<td>{{i.lng}}</td>
+																			<td id="service_col"></td>
+																		</tr>
+																	{% endfor %}
+																{% endif %}
+															</tbody>
+														</table><!--table-->
+												</div><!--table head-->
+											</div><!--tile body-->
+										</div><!--tile-->
+									</div>
+								</div>
+						</section>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block jscontent %}
+<script src="{% static "jquery/json_viewer/js/jjsonviewer.js"%}"></script>
+
+<script>
+function validate_n_submit()
+{
+	var table_div=document.getElementById("page_id");
+	var search_div=document.getElementById("placeholder");
+	if(table_div.style.display=="" || search_div.style.display=="none")
+	{
+		table_div.style.display="none";
+		search_div.style.display="";
+	}
+	var latitude=document.getElementById("lat").value;
+	var longitude=document.getElementById("long").value;
+	var version_id="34";
+	var device_id="00000000-2593-5ca6-ffff-fffff2d28659";
+	var url = "/api/v1/available_services/?format=json&location__mpoly__contains=";
+	var urls=url+encodeURI("{['type':'Point','coordinates':["+latitude+","+longitude+"]}")+"&version="+version_id+"&device_id="+device_id;
+	$(document).ready(function(){
+	    document.getElementById("image_div").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+		$(document).ajaxStart(function(){
+			$("#image_div").css("display", "block");
+		});
+		$(document).ajaxComplete(function(){
+			$("#image_div").css("display", "none");
+		});
+		$.getJSON(urls,function(data){
+			console.log(urls);
+			var len=Object.keys(data.objects).length;
+			if(len==0){
+				$("#placeholder").jJsonViewer("no avilable services");
+			}
+			else{
+				$("#placeholder").jJsonViewer(data);
+			}
+		});
+	});
+}
+function get_json(i,latitude, longitude)
+{
+	var version_id='34';
+	var device_id='00000000-2593-5ca6-ffff-fffff2d28659';
+	var table1=document.getElementById("service_list");
+	var url = "/api/v1/available_services/?format=json&location__mpoly__contains=";
+	var urls=url+encodeURI("{['type':'Point','coordinates':["+latitude+","+longitude+"]}")+"&version="+version_id+"&device_id="+device_id;
+	var col=[];
+
+	$(document).ready(function(){
+	    document.getElementById("image_div").innerHTML='<img src="{% static "ajax-loader.gif"%}"  style="padding-top:17px;padding-bottom:17px;margin-left: 48%;"/>';
+		$(document).ajaxStart(function(){
+			$("#image_div").css("display", "block");
+		});
+		$(document).ajaxComplete(function(){
+			$("#image_div").css("display", "none");
+		});
+		$.getJSON(urls,function(data){
+			var service=[];
+			col=table1.rows[i].getElementsByTagName("td");
+			var len=Object.keys(data.objects).length;
+			if(len==0)
+			{
+				col[4].innerHTML="no service available";
+			}
+			else
+			{
+				for(var j=0;j<=len+1;j++)
+				{
+					service[j]=data.objects[j].service.name;
+					col[4].innerHTML=col[4].innerHTML+service[j]+', ';
+				}
+			}
+		});
+	});
+}
+function test_submit()
+{
+	var search_div=document.getElementById("placeholder");
+	var table_div=document.getElementById("page_id");
+	if(search_div.style.display=="" || table_div.style.display=="none")
+	{
+		search_div.style.display="none";
+		table_div.style.display="";
+	}
+	{% for i in location %}
+		j = {{ forloop.counter }}
+		setTimeout(function() {get_json({{forloop.counter}},{{i.lat}},{{ i.lng }})},j*1000);
+	{% endfor %}
+}
+</script>
+{% endblock %}

@@ -1,0 +1,538 @@
+{% extends "new_custom_admin/base.html" %}
+{% load static %}
+
+{% block body_class_content %}
+class="appWrapper sidebar-xs-forced device-lg scheme-default default-scheme-color header-fixed aside-fixed rightbar-hidden sidebar-xs"
+{% endblock %}
+
+
+{% block bodycontent %}
+<div class="page page-shop-products">
+    <div class="pageheader">
+        <h2>Products </h2>
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="/movinCartAdmin/"><i class="fa fa-home"></i> MovinCart</a>
+                </li>
+                <li>
+                    <a href="#">Store Products</a>
+                </li>
+                <li>
+                    <a href="#">Products</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- page content -->
+    <div class="pagecontent">
+        <!-- row -->
+        <div class="row">
+            <!-- col -->
+            <div class="col-md-12">
+                <!-- tile -->
+            <form class="form-horizontal ng-pristine ng-valid" id="filter_form"role="form" action="/movinCartAdmin/storeproductmapping/" method="GET">
+                    {% csrf_token %}
+                <section class="tile">
+
+                        <div class="tile-header dvd dvd-btm">
+                            <h1 class="custom-font"><strong>Filters</strong></h1>
+                            <ul class="controls">
+                                <li><a href="/admin/app/storeproductmapping/add"><i class="fa fa-plus mr-5"></i> New Store Product</a></li>
+                                <li><a href="#" onclick="load_json()"><i class="fa fa-filter mr-5"></i> Get Result</a></li>
+                                 <li class="dropdown">
+                                    <a role="button" tabindex="0" class="tile-toggle">
+                                        <span class="minimize"><i class="fa fa-angle-down"></i></span>
+                                        <span class="expand"><i class="fa fa-angle-up"></i></span>
+                                    </a>
+                                </li>
+                                <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="tile-body">
+                            <div class="form-group">
+
+                                <label for="store" class="col-sm-2 control-label">Store: <span class="text-lightred text-md">*</span></label>
+                                <div class="col-sm-9">
+                                    <select tabindex="3" id="store" name="store" multiple="" class="chosen-select" style="width: 100%;">
+                                        {% if main_stores %}
+                                            <optgroup label="Main/Basic">
+                                            {% for ms in main_stores %}
+                                                <option {% if ms.id in selected_stores %}selected{% endif %} value="{{ ms.id }}">{{ ms.name }}</option>
+                                            {% endfor %}
+                                            </optgroup>
+                                        {% endif %}
+                                        {% if local_stores %}
+                                            <optgroup label="Local Stores">
+                                            {% for ms in local_stores %}
+                                                <option {% if ms.id in selected_stores %}selected{% endif %} value="{{ ms.id }}">{{ ms.name }}</option>
+                                            {% endfor %}
+                                            </optgroup>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category" class="col-sm-2 control-label">Category: </label>
+                                <div class="col-sm-9">
+                                    <select tabindex="3" id="category" name="category" multiple="" class="chosen-select" style="width: 100%;">
+                                        {% for key,value in category_vise_sub_categories.items %}
+                                            <optgroup label="{{key}}">
+                                                {% for sub_cat in value  %}
+                                                    <option {% if sub_cat.id in selected_categories %}
+                                                        selected
+                                                    {% endif %} value="{{sub_cat.id}}">{{sub_cat.name}}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                         {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="p_name" class="col-sm-2 control-label">Keyword: </label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="{{ keyword }}" id="p_name" name="p_name" class="form-control" placeholder="Find a keyword in name or brand"/>
+                                </div>
+                                <label for="p_id" class="col-sm-1 control-label">ID: </label>
+                                <div class="col-sm-4">
+                                    <input value="{{ id }}" type="text" id="p_id" name="p_id" class="form-control" placeholder="Find By Id"/>
+                                </div>
+                            </div>
+                        </div>
+
+                </section>
+            </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- col -->
+            <div class="col-md-12">
+                <section class="tile">
+
+                    <!-- tile header -->
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font"><strong>Products</strong> List</h1>
+                        <ul class="controls">
+                            <li style="display: none;" id="save_all_button_li"><a href="#" onclick="save_all_products()"><i class="fa fa-save mr-5"></i> Save All</a></li>
+                            {% if perms.app.can_download_product_dump %}
+                                <li class="dropdown">
+                                    <a role="button" tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down ml-5"></i></a>
+                                    <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                                        <li>
+                                            <a href="#" onclick="download_dump()">Export to XLS</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            <li class="dropdown">
+                                <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
+                                    <i class="fa fa-cog"></i>
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </a>
+                                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                                    <li>
+                                        <a role="button" tabindex="0" class="tile-toggle">
+                                            <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
+                                            <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a role="button" tabindex="0" class="tile-refresh">
+                                            <i class="fa fa-refresh"></i> Refresh
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a role="button" tabindex="0" class="tile-fullscreen">
+                                            <i class="fa fa-expand"></i> Fullscreen
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- /tile header -->
+                    <!-- tile body -->
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-custom" style="display: none;" id="products-list">
+                                <thead>
+                                <tr>
+                                    <th style="width:40px;">ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Brand</th>
+                                    <th>Store</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th style="width:80px;">Price</th>
+                                    <th style="width:80px;">Discount</th>
+                                    <th style="width:80px;">Order</th>
+                                    <th style="width:80px;">Max Buy</th>
+                                    <th>Status</th>
+                                    <th style="width:90px;" class="no-sort">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody id="table_body">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /tile body -->
+                </section>
+                <!-- /tile -->
+            </div>
+            <!-- /col -->
+        </div>
+        <!-- /row -->
+
+    </div>
+    <!-- /page content -->
+</div>
+<div style="display:none" id="hidden"></div>
+{% endblock %}
+
+{% block modelcontent %}
+<div class="modal splash fade" id="copy_Model" tabindex="-1" role="dialog" aria-labelledby="coypLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="coypLabel">Copy Product From Main Store To Local Store</h4>
+            </div>
+            <form class="form-horizontal ng-pristine ng-valid" id="filter_form"role="form" action="/movinCartAdmin/copy_product_in_local_store/" method="POST">
+            {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="copy_store" class="col-sm-2 control-label">Store: <span class="text-lightred text-md">*</span></label>
+                            <div class="col-sm-9">
+                                <select required tabindex="3" id="copy_store" name="copy_store" multiple="" class="chosen-select" style="width: 100%;">
+                                    <option  value="">Choose a Store</option>
+                                    {% if local_stores %}
+                                            {% for ms in local_stores %}
+                                                <option  value="{{ ms.id }}">{{ ms.name }}</option>
+                                            {% endfor %}
+                                    {% endif %}
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price_p_copy" class="col-sm-2 control-label">Price:</label>
+                            <div class="col-sm-5">
+                                <input  name="price_to_be_copied" type="text" class="form-control" id="price_p_copy" placeholder="Price">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="checkbox checkbox-custom-alt checkbox-custom-lg">
+                                    <input id ="same_price_check" onclick="change_required_price()" name="price_checkbox"checked type="checkbox"><i></i> Same As Main Store
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="different_size_chk" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-5">
+                                <label class="checkbox checkbox-custom-alt">
+                                    <input onclick="toggle_size_div()" name="new_size_chk" id="new_size_chk"type="checkbox" ><i></i> Add with new size
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="new_size_div" style="display:none;">
+                        <div class="form-group">
+                            <label for="different_size_chk" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-3">
+                                <input name="new_size_magnitude" type="text" class="form-control" id="new_size_magnitude" placeholder="Magnitude">
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="new_size_unit" type="text" class="form-control" id="new_size_unit" placeholder="Unit">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input  type="hidden" id="p_to_be_copied_id" name="p_to_be_copied_id"/>
+                <input value="{{ request.get_full_path }}" id="page_url" type="hidden" name="page_url"/>
+                <div class="alert alert-warning alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <strong>Info!</strong> Product's stock will be available in Local .
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default btn-border" type="submit">Copy</button>
+                    <button class="btn btn-default btn-border" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block jscontent %}
+<script>
+    var time=0;
+    var changed_id_list=[];
+    function load_json() {
+        //initialize datatable
+        changed_id_list=[];
+        document.getElementById("save_all_button_li").style.display = "none";
+        $("#table_body").empty();
+        document.getElementById("products-list").style.display = "block";
+        var id = $("#p_id").val();
+        if (id==null)
+            id="";
+        var category = $("#category").val();
+        if (category==null)
+            category = "";
+        var keyword = $("#p_name").val();
+        if (keyword==null)
+            keyword="";
+        var store = $("#store").val();
+        if (store==null)
+            store="";
+        table = $('#products-list').DataTable({
+            destroy: true,
+        });
+        table.destroy();
+        $('#products-list').DataTable({
+            "ajax": '/movinCartAdmin/get_store_product_json/?store='+store+"&sp_id="+id+"&category="+category+"&p_name="+keyword,
+            "columns": [
+                {"data": "id"},
+                {"data": "image"},
+                {"data": "name"},
+                {"data": "brand"},
+                {"data": "store"},
+                {"data": "category"},
+                {"data": "size"},
+                {"data": "price"},
+                {"data": "discount"},
+                {"data": "order"},
+                {"data": "max_buy"},
+                {"data": "status"},
+                {"data": "action"}
+            ],
+            "dom": '<"row"<"col-md-8 col-sm-12"<"inline-controls"l>><"col-md-4 col-sm-12"<"pull-right"f>>>t<"row"<"col-md-4 col-sm-12"<"inline-controls"l>><"col-md-4 col-sm-12"<"inline-controls text-center"i>><"col-md-4 col-sm-12"p>>',
+            "language": {
+                "sLengthMenu": 'View _MENU_ records',
+                "sInfo": 'Found _TOTAL_ records',
+                "oPaginate": {
+                    "sPage": "Page ",
+                    "sPageOf": "of",
+                    "sNext": '<i class="fa fa-angle-right"></i>',
+                    "sPrevious": '<i class="fa fa-angle-left"></i>'
+                }
+            },
+            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+            "pagingType": "input",
+            "order": [[2, "asc"]],
+            "aoColumnDefs": [
+                {'bSortable': false, 'aTargets': ["no-sort"]}
+            ],
+        });
+        setTimeout(refresh_my, 1000);
+        load_js_again();
+    }
+    function refresh_my() {
+        load_js_again();
+        time=time+1;
+        if (time<10) {
+            setTimeout(refresh_my, 1000);
+        }
+        console.log(time);
+     }
+    function download_dump(){
+        var store = $("#store").val();
+        alert(store);
+        if (store!=null){
+            window.location.href= '/movinCartAdmin/productdump/?stores='+store;
+        }
+    }
+
+    function load_js_again(){
+{#        alert('yo');#}
+        $('.form-control').each(function() {
+           var elem = $(this);
+           elem.data('oldVal', elem.val());
+           elem.bind("propertychange change click keyup input paste", function(event){
+              // If value has changed...
+              id = elem.attr('id')
+               if (id != null) {
+                   id = id.replace("p_price", "").replace("p_discount", "").replace("p_max_buy", "").replace("p_visiblity", "").replace("p_display_order", "");
+                   // alert(id);
+                   if (id != "keyword" && id != "price_p_copy") {
+                       var save_button_id = 'save_button' + id;
+                       if (changed_id_list.indexOf(id) == -1) {
+                           changed_id_list.push(id);
+                       }
+                       if (changed_id_list.length > 0) {
+                           document.getElementById("save_all_button_li").style.display = "block";
+                       } else {
+                           document.getElementById("save_all_button_li").style.display = "none";
+                       }
+                       document.getElementById(save_button_id).className = "btn btn-danger btn-rounded-20 mb-10";
+                   }
+                   if (id != "keyword" && id != "price_p_copy") {
+                       var save_button_id = 'save_button' + id;
+
+                   }
+               }
+           });
+         });
+        $('.test_check').each(function() {
+           var elem = $(this);
+           elem.data('oldVal', elem.val());
+           elem.bind("propertychange change click keyup input paste", function(event){
+              // If value has changed...
+              id = elem.attr('id')
+               if (id != null) {
+                   id = id.replace("p_price", "").replace("p_discount", "").replace("p_max_buy", "").replace("p_visiblity", "").replace("p_display_order", "");
+                   // alert(id);
+                   if (id != "keyword" && id != "price_p_copy") {
+                       var save_button_id = 'save_button' + id;
+                       if (changed_id_list.indexOf(id) == -1) {
+                           changed_id_list.push(id);
+                       }
+                       if (changed_id_list.length > 0) {
+                           document.getElementById("save_all_button_li").style.display = "block";
+                       } else {
+                           document.getElementById("save_all_button_li").style.display = "none";
+                       }
+                       document.getElementById(save_button_id).className = "btn btn-danger btn-rounded-20 mb-10";
+                   }
+                   if (id != "keyword" && id != "price_p_copy") {
+                       var save_button_id = 'save_button' + id;
+
+                   }
+               }
+           });
+         });
+        $('#price_p_copy').each(function() {
+           var elem = $(this);
+           elem.data('oldVal', elem.val());
+           elem.bind("propertychange change click keyup input paste", function(event){
+               if(elem.val()!="") {
+                   document.getElementById("same_price_check").checked = false;
+               }
+           });
+         });
+    }
+    $(window).load(function(){
+        $('.form-control').each(function() {
+           var elem = $(this);
+           elem.data('oldVal', elem.val());
+           elem.bind("propertychange change click keyup input paste", function(event){
+              // If value has changed...
+              id = elem.attr('id')
+               if (id != null) {
+                   id = id.replace("p_price", "").replace("p_discount", "").replace("p_max_buy", "").replace("p_visiblity", "").replace("p_display_order", "");
+                   // alert(id);
+                   if (id != "keyword" && id != "price_p_copy") {
+                       var save_button_id = 'save_button' + id;
+                       if (changed_id_list.indexOf(id) == -1) {
+                           changed_id_list.push(id);
+                       }
+                       if (changed_id_list.length > 0) {
+                           document.getElementById("save_all_button_li").style.display = "block";
+                       } else {
+                           document.getElementById("save_all_button_li").style.display = "none";
+                       }
+                       document.getElementById(save_button_id).className = "btn btn-danger btn-rounded-20 mb-10";
+                   }
+                   if (id != "keyword" && id != "price_p_copy") {
+                       var save_button_id = 'save_button' + id;
+
+                   }
+               }
+           });
+         });
+        $('#price_p_copy').each(function() {
+           var elem = $(this);
+           elem.data('oldVal', elem.val());
+           elem.bind("propertychange change click keyup input paste", function(event){
+               if(elem.val()!="") {
+                   document.getElementById("same_price_check").checked = false;
+               }
+           });
+         });
+    });
+    function save_product(id){
+        // alert(id);
+        saved_prev=true;
+        var p_id = id;
+        var save_button_id='save_button'+id;
+        document.getElementById(save_button_id).className="btn btn-success btn-rounded-20 mb-10"
+        var p_price = encodeURIComponent(document.getElementById("p_price"+id).value);
+        var p_discount = encodeURIComponent(document.getElementById("p_discount"+id).value);
+        var p_visiblity = encodeURIComponent(document.getElementById("p_visiblity"+id).checked);
+        var p_max_buy = encodeURIComponent(document.getElementById("p_max_buy"+id).value);
+        var p_display_order = encodeURIComponent(document.getElementById("p_display_order"+id).value);
+        var save_product_url = '/movinCartAdmin/edit_product_info_frm_table/?p_id='+p_id+'&p_price='+p_price+'&p_discount='+p_discount+'&p_visiblity='+p_visiblity+'&p_max_buy='+p_max_buy+'&p_display_order='+p_display_order;
+        $('#hidden').load(save_product_url, function(){
+
+          });
+        return false;
+    }
+    function save_all_products(){
+        for(i = 0; i <changed_id_list.length; i++){
+            var p_id = changed_id_list[i]+"";
+            var id = p_id;
+            var save_button_id='save_button'+id;
+            // alert(save_button_id);
+            document.getElementById(save_button_id).className="btn btn-success btn-rounded-20 mb-10"
+            var p_price = encodeURIComponent(document.getElementById("p_price"+id).value);
+            var p_discount = encodeURIComponent(document.getElementById("p_discount"+id).value);
+            var p_visiblity = encodeURIComponent(document.getElementById("p_visiblity"+id).checked);
+            var p_max_buy = encodeURIComponent(document.getElementById("p_max_buy"+id).value);
+            var p_display_order = encodeURIComponent(document.getElementById("p_display_order"+id).value);
+            var save_product_url = '/movinCartAdmin/edit_product_info_frm_table/?p_id='+p_id+'&p_price='+p_price+'&p_discount='+p_discount+'&p_visiblity='+p_visiblity+'&p_max_buy='+p_max_buy+'&p_display_order='+p_display_order;
+            $('#hidden').load(save_product_url, function(){});
+            delete changed_id_list[i];
+            if(changed_id_list.length>0){
+                document.getElementById("save_all_button_li").style.display = "block";
+            }else{
+                document.getElementById("save_all_button_li").style.display = "none";
+            }
+        }
+        changed_id_list=[];
+        if(changed_id_list.length>0){
+            document.getElementById("save_all_button_li").style.display = "block";
+        }else{
+            document.getElementById("save_all_button_li").style.display = "none";
+        }
+    }
+    function copy_product(id){
+        //alert("hello"+id);
+        $('#p_to_be_copied_id').val(id+"");
+
+    }
+    function change_required_price(){
+        if(document.getElementById("same_price_check").checked == true){
+            document.getElementById("price_p_copy").required = false;
+        }else{
+            document.getElementById("price_p_copy").required = true;
+        }
+    }
+    function toggle_size_div(){
+        if(document.getElementById("new_size_chk").checked == true){
+            var vis = "block";
+            document.getElementById("new_size_div").style.display = vis;
+            document.getElementById("same_price_check").checked = false;
+            document.getElementById("same_price_check").disabled = true;
+            document.getElementById("price_p_copy").required = true;
+            document.getElementById("new_size_magnitude").required = true;
+            document.getElementById("new_size_unit").required = true;
+
+        }else{
+            var vis = "none";
+            document.getElementById("new_size_div").style.display = vis;
+            document.getElementById("same_price_check").disabled = false;
+            document.getElementById("price_p_copy").required = false;
+            document.getElementById("new_size_magnitude").required = false;
+            document.getElementById("new_size_unit").required = false;
+        }
+    }
+    </script>
+{% endblock %}
